@@ -1,0 +1,76 @@
+name: "nodejs-setup"
+description: "Setup action for NodeJS project"
+inputs:
+  packageName: 
+    description: 'package name'
+    required: true
+  nodeJsVersion: 
+    description: 'nodejs version'
+    required: false
+  github_email:
+    description: 'github email'
+    required: false
+  github_usernamePasswordCredential:
+    description: 'github credential'
+    required: false
+  artifactory_url:
+    description: 'artifactory url'
+    required: false
+  artifactory_usernamePasswordCredential:
+    description: 'artifactory credential'
+    required: false
+  pax_sshHost:
+    description: 'ssh host for pax'
+    required: false
+  pax_sshPort:
+    description: 'ssh port for pax'
+    required: false
+  pax_sshCredential:
+    description: 'ssh credential'
+    required: false
+  pax_remoteWorkspace:
+    description:  'remote workspace path'
+    required: false
+  installRegistry_email:
+    description: 'install registry email'
+    required: false
+  installRegistry_username:
+    description: 'install registry username'
+    required: false
+  installRegistry_password:
+    description: 'install registry password'
+    required: false
+  installRegistry_registry:
+    description: 'install registry url'
+    required: false
+  publishRegistry_email:
+    description: 'publish registry email'
+    required: false
+  publishRegistry_username:
+    description: 'publish registry username'
+    required: false
+  publishRegistry_password:
+    description: 'publish registry password'
+    required: false
+  disableAudit:
+    description: 'skip audit flag'
+    required: false
+  disableLint:
+    description: 'skip lint flag'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - run: cd ${{github.action_path}}/.. && npm install && node setup-action/setup.js
+      shell: bash
+      env:
+        INPUT_PACKAGENAME: ${{ inputs.packageName }}
+        INPUT_NODEJSVERSION: ${{ inputs.nodeJsVersion }}
+        INPUT_PUBLISHREGISTRY_EMAIL: ${{ inputs.publishRegistry_email }}
+        INPUT_PUBLISHREGISTRY_USERNAME: ${{ inputs.publishRegistry_username }}
+        INPUT_PUBLISHREGISTRY_PASSWORD: ${{ inputs.publishRegistry_password }}
+        INPUT_INSTALLREGISTRY_REGISTRY: ${{ inputs.installRegistry_registry }}
+        INPUT_INSTALLREGISTRY_EMAIL: ${{ inputs.installRegistry_email }}
+        INPUT_INSTALLREGISTRY_USERNAME: ${{ inputs.installRegistry_username }}
+        INPUT_INSTALLREGISTRY_PASSWORD: ${{ inputs.installRegistry_password }}

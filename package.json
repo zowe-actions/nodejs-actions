@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-actions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zowe-actions/NodeJS-actions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zowe-actions/NodeJS-actions/issues"
+  },
+  "homepage": "https://github.com/zowe-actions/NodeJS-actions#readme",
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "@actions/github": "^5.0.0",
+    "semver": "^7.3.5"
+  }
+}
