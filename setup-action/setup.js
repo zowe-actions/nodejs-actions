@@ -102,10 +102,15 @@ console.log('Package information: '+packageName+' v'+packageInfo.get('version'))
     
 // do we want to use default version of node.js on the build container?
 console.log('Pipeline will use node.js '+nodeJsVersion+' to build and test')
-this.sh ('set +x\nnvm install '+nodeJsVersion+'\nnpm install npm -g\nnpm install yarn -g', true)
+sh ('set +x\nnvm install '+nodeJsVersion+'\nnpm install npm -g\nnpm install yarn -g', true)
 
 
-
+function sh(cmd,debug) {
+    if (debug) {
+        console.log('Running $ '+cmd)
+    }
+    execSync(cmd,  {stdio: 'inherit'});
+}
 
         //process.env.'artifactory_url');
         //console.log(`Hello ${nameToGreet}!`);
