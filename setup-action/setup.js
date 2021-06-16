@@ -17,16 +17,14 @@ var installRegistry
 var packageName
 var nodejsVersion
 
-// Get packageName                  
-if (packageName) 
-    packageName = core.getInput('packageName')
-else 
+// Get packageName
+packageName = core.getInput('packageName')     
+if (!packageName) 
     throw new InvalidArgumentException('packageName')
 
 // Get nodejs version
-if (nodejsVersion)
-    nodejsVersion = core.getInput('nodeJsVersion')
-else
+nodejsVersion = core.getInput('nodeJsVersion')
+if (!nodejsVersion)
     throw new InvalidArgumentException('nodeJsVersion')
 
 // Making publishRegistry
