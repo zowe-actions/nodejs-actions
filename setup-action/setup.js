@@ -23,8 +23,8 @@ if (!packageName)
     throw new InvalidArgumentException('packageName')
 
 // Get nodejs version
-nodejsVersion = core.getInput('nodeJsVersion')
-if (!nodejsVersion)
+nodeJsVersion = core.getInput('nodeJsVersion')
+if (!nodeJsVersion)
     throw new InvalidArgumentException('nodeJsVersion')
 
 // Making publishRegistry
