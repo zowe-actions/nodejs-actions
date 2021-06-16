@@ -103,7 +103,14 @@ console.log('Package information: '+packageName+' v'+packageInfo.get('version'))
     
 // do we want to use default version of node.js on the build container?
 console.log('Pipeline will use node.js '+nodeJsVersion+' to build and test')
-sh ('set +x\nnvm install '+nodeJsVersion+'\nnpm install npm -g\nnpm install yarn -g', true)
+var nvmScript = process.env.HOME + '/.nvm/nvm.sh'
+var cmds = new Array()
+cmds.push('set +x')
+cmds.push('. '+nvmScript)
+cmds.push('nvm install '+nodeJsVersion)
+cmds.push('npm install npm -g')
+cmds.push('npm install yarn -g')
+sh (cmds.join('\n'), true)
 
 
 function sh(cmd,debug) {
