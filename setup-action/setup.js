@@ -12,6 +12,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const Registry = require('../npm/Registry.js')
 const InvalidArgumentException = require('../InvalidArgumentException.js')
+const { execSync } = require('child_process');
 var publishRegistry
 var installRegistry
 var packageName
