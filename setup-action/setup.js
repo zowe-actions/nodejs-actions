@@ -108,9 +108,8 @@ var cmds = new Array()
 cmds.push('set +x')
 cmds.push('. '+nvmScript)
 cmds.push('nvm install '+nodeJsVersion)
-cmds.push('cat '+process.env.HOME+'/.npmrc')
-//cmds.push('npm install npm -g')
-//cmds.push('npm install yarn -g')
+cmds.push('npm install npm -g')
+cmds.push('npm install yarn -g')
 sh (cmds.join('\n'), true)
 
 
