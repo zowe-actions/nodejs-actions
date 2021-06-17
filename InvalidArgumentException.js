@@ -25,4 +25,4 @@ class InvalidArgumentException extends Error {
     }
 }
 
-module.exports = InvalidArgumentException; 
+export default InvalidArgumentException; 
