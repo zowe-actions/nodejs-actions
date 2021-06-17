@@ -8,13 +8,11 @@
  * Copyright IBM Corporation 2021
  */
 
-const fs = require('fs')
-const semver = require('semver')
+import { readFileSync } from 'fs'
 const PACKAGE_JSON = 'package.json'
 const NPMRC_FILE = '~/.npmrc'
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org/'
-const InvalidArgumentException = require('../InvalidArgumentException.js')
-const { execSync } = require('child_process');
+import InvalidArgumentException from '../InvalidArgumentException.js'
 var debug = false
 
 class Registry {
@@ -96,31 +94,6 @@ class Registry {
         }
     }
 
-
-    fileExists(path) {
-        var err
-        fs.access(path, fs.constants.F_OK, (err) => {
-            if (err)
-                console.log(`${path} does not exist`);
-        });
-        if (!err)
-            return true
-        else
-            return false
-    }
-
-    parseSemanticVersion(version) {
-        var versionMap = new Map()
-        versionMap.set('major', semver.major(version))
-        versionMap.set('minor', semver.minor(version))
-        versionMap.set('patch', semver.patch(version))
-        var prerelease = semver.prerelease(version)
-        if (prerelease)
-            versionMap.set('prerelease', ''+prerelease[0]+prerelease[1])
-        return versionMap
-    }
-
-
     /**
      * Login to NPM registry.
      *
@@ -193,7 +166,7 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            this.sh(configEntries.join('\n'), debug)
+            utils.sh(configEntries.join('\n'), debug)
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
@@ -213,23 +186,16 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            this.sh(configEntries.join('\n'), debug)
+            utils.sh(configEntries.join('\n'), debug)
         }
 
         // debug info: npm configs
-        this.sh('npm config list', debug)
+        utils.sh('npm config list', debug)
         
         // get login information
-        var whoami = this.sh('npm whoami --registry '+this.registry, debug)
+        var whoami = utils.sh('npm whoami --registry '+this.registry, debug)
 
         return whoami
-    }
-
-    sh(cmd,debug) {
-        if (debug) {
-            console.log('Running $ '+cmd)
-        }
-        execSync(cmd,  {stdio: 'inherit'});
     }
 
     /**
@@ -261,8 +227,8 @@ class Registry {
         
         var packageJsonFileFullPath = process.env.GITHUB_WORKSPACE + '/' + this.packageJsonFile
 
-        if (this.packageJsonFile && this.fileExists(packageJsonFileFullPath)) {
-            var pkg = JSON.parse(fs.readFileSync(packageJsonFileFullPath));
+        if (this.packageJsonFile && utils.fileExists(packageJsonFileFullPath)) {
+            var pkg = JSON.parse(readFileSync(packageJsonFileFullPath));
             
             if (pkg) {
                 if (pkg['name']) {
@@ -280,7 +246,7 @@ class Registry {
                 }
                 if (pkg['version']) {
                     info.set('version', pkg['version'])
-                    info.set('versionTrunks', this.parseSemanticVersion(info.get('version')))
+                    info.set('versionTrunks', utils.parseSemanticVersion(info.get('version')))
                 }
                 if (pkg['license']) {
                     info.set('license', pkg['license'])
@@ -308,4 +274,4 @@ class Registry {
         return info
     }
 }
-module.exports = Registry; 
+export default Registry; 

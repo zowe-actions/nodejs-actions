@@ -12,7 +12,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const Registry = require('../npm/Registry.js')
 const InvalidArgumentException = require('../InvalidArgumentException.js')
-const { execSync } = require('child_process');
+import * as utils from '../common/utils.js';
 var publishRegistry
 var installRegistry
 var packageName
@@ -111,15 +111,7 @@ cmds.push('. '+nvmScript)
 cmds.push('nvm install '+nodeJsVersion)
 cmds.push('npm install npm -g')
 cmds.push('npm install yarn -g')
-sh (cmds.join('\n'), debug)
-
-
-function sh(cmd,debug) {
-    if (debug) {
-        console.log('Running $ '+cmd)
-    }
-    execSync(cmd,  {stdio: 'inherit'});
-}
+utils.sh (cmds.join('\n'), debug)
 
         //process.env.'artifactory_url');
         //console.log(`Hello ${nameToGreet}!`);
