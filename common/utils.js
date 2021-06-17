@@ -10,15 +10,14 @@ export function sh(cmd,debug) {
 }
 
 export function fileExists(path) {
-    var err
-    fs.access(path, fs.constants.F_OK, (err) => {
-        if (err)
-            console.log(`${path} does not exist`);
-    });
-    if (!err)
+    try {
+        fs.accessSync(path, fs.constants.F_OK)
+        console.log(path+' does exist')
         return true
-    else
+    } catch {
+        console.error(path+' does not exist')
         return false
+    }
 }
 
 export function parseSemanticVersion(version) {
