@@ -11,7 +11,7 @@
 import core from '@actions/core'
 import github from '@actions/github'
 import Registry from '../npm/Registry.js'
-import InvalidArgumentException from '../InvalidArgumentException.js'
+import InvalidArgumentException from '../common/InvalidArgumentException.js'
 import * as utils from '../common/utils.js';
 
 var publishRegistry

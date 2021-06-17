@@ -13,7 +13,7 @@ import * as utils from '../common/utils.js';
 const PACKAGE_JSON = 'package.json'
 const NPMRC_FILE = '~/.npmrc'
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org/'
-import InvalidArgumentException from '../InvalidArgumentException.js'
+import InvalidArgumentException from '../common/InvalidArgumentException.js'
 var debug = false
 
 class Registry {
