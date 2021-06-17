@@ -196,7 +196,7 @@ class Registry {
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
-            var usernamePasswordString = this.username+this.password
+            var usernamePasswordString = this.username+':'+this.password
             var base64UsernamePassword = Buffer.from(usernamePasswordString).toString('base64')
             var configEntries = new Array()
             configEntries.push('set +x')
