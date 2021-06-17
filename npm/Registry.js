@@ -8,7 +8,7 @@
  * Copyright IBM Corporation 2021
  */
 
-import { readFileSync } from 'fs'
+import fs from 'fs'
 import * as utils from '../common/utils.js';
 const PACKAGE_JSON = 'package.json'
 const NPMRC_FILE = '~/.npmrc'
@@ -229,7 +229,7 @@ class Registry {
         var packageJsonFileFullPath = process.env.GITHUB_WORKSPACE + '/' + this.packageJsonFile
 
         if (this.packageJsonFile && utils.fileExists(packageJsonFileFullPath)) {
-            var pkg = JSON.parse(readFileSync(packageJsonFileFullPath));
+            var pkg = JSON.parse(fs.readFileSync(packageJsonFileFullPath));
             
             if (pkg) {
                 if (pkg['name']) {
