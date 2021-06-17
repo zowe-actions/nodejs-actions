@@ -15,6 +15,7 @@ const NPMRC_FILE = '~/.npmrc'
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org/'
 const InvalidArgumentException = require('../InvalidArgumentException.js')
 const { execSync } = require('child_process');
+var debug = false
 
 class Registry {
     packageJsonFile;
@@ -192,7 +193,7 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            this.sh(configEntries.join('\n'))
+            this.sh(configEntries.join('\n'), debug)
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
@@ -212,14 +213,14 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            this.sh(configEntries.join('\n'))
+            this.sh(configEntries.join('\n'), debug)
         }
 
         // debug info: npm configs
-        this.sh('npm config list', true)
+        this.sh('npm config list', debug)
         
         // get login information
-        var whoami = this.sh('npm whoami --registry '+this.registry, true)
+        var whoami = this.sh('npm whoami --registry '+this.registry, debug)
 
         return whoami
     }

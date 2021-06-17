@@ -16,7 +16,8 @@ const { execSync } = require('child_process');
 var publishRegistry
 var installRegistry
 var packageName
-var nodejsVersion
+var nodeJsVersion
+var debug = false
 
 // Get packageName
 packageName = core.getInput('packageName')     
@@ -110,7 +111,7 @@ cmds.push('. '+nvmScript)
 cmds.push('nvm install '+nodeJsVersion)
 cmds.push('npm install npm -g')
 cmds.push('npm install yarn -g')
-sh (cmds.join('\n'), true)
+sh (cmds.join('\n'), debug)
 
 
 function sh(cmd,debug) {
