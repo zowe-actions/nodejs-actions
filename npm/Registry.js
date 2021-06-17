@@ -9,6 +9,7 @@
  */
 
 import { readFileSync } from 'fs'
+import * as utils from '../common/utils.js';
 const PACKAGE_JSON = 'package.json'
 const NPMRC_FILE = '~/.npmrc'
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org/'

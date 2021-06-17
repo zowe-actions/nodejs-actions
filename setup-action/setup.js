@@ -8,11 +8,12 @@
  * Copyright IBM Corporation 2021
  */
 
-const core = require('@actions/core');
-const github = require('@actions/github');
-const Registry = require('../npm/Registry.js')
-const InvalidArgumentException = require('../InvalidArgumentException.js')
+import core from '@actions/core'
+import github from '@actions/github'
+import Registry from '../npm/Registry.js'
+import InvalidArgumentException from '../InvalidArgumentException.js'
 import * as utils from '../common/utils.js';
+
 var publishRegistry
 var installRegistry
 var packageName
