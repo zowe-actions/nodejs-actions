@@ -62,7 +62,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: cd ${{github.action_path}}/.. && npm install && node setup-action/setup.js
+    - run: |
+        cd ${{github.action_path}}/..
+        npm install
+        cd ${{github.action_path}}
+        node setup.js
       shell: bash
       env:
         INPUT_PACKAGENAME: ${{ inputs.packageName }}
