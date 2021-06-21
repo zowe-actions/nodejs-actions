@@ -6,7 +6,7 @@ export function sh(cmd,debug) {
     if (debug) {
         console.log('Running $ '+cmd)
     }
-    return execSync(cmd);
+    return execSync(cmd).toString().trim()
 }
 
 export function fileExists(path) {
@@ -39,7 +39,8 @@ export function nvmShellInit(nodeJsVersion) {
     cmds.push('nvm install '+nodeJsVersion)
     cmds.push('npm install npm -g')
     cmds.push('npm install yarn -g')
-    utils.sh (cmds.join('\n'))
+    cmds.push('npm install ci -g')
+    return this.sh(cmds.join(';'))
 }
 
 export function nvmShell(nodeJsVersion, scripts) {
@@ -49,7 +50,8 @@ export function nvmShell(nodeJsVersion, scripts) {
     cmds.push('. '+nvmScript)
     cmds.push('nvm use '+nodeJsVersion)
     cmds.push('set -x')
-    for (var eachLine in scripts) {
-        cmds.push(eachLine)
-    }
+    scripts.forEach((x, i) => {
+        cmds.push(x)
+    });
+    return this.sh(cmds.join(';'))
 }

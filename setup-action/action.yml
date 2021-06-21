@@ -1,48 +1,66 @@
 name: "nodejs-setup"
 description: "Setup action for NodeJS project"
 inputs:
-  packageName: 
+  package-name: 
     description: 'package name'
     required: true
-  nodeJsVersion: 
+  nodejs-version: 
     description: 'nodejs version'
+    required: true
+
+  install-registry-url:
+    description: 'install registry url'
+    required: true
+  install-registry-email:
+    description: 'install registry email'
+    required: true
+  install-registry-username:
+    description: 'install registry username'
+    required: true
+  install-registry-password:
+    description: 'install registry password'
+    required: true
+  install-registry-token-credential:
+    description: 'install registry token credential'
     required: false
-  pax_sshHost:
+
+  publish-registry-email:
+    description: 'publish registry email'
+    required: true
+  publish-registry-username:
+    description: 'publish registry username'
+    required: true
+  publish-registry-password:
+    description: 'publish registry password'
+    required: true
+  publish-registry-token-credential:
+    description: 'publish registry token credential'
+    required: false
+
+  pax-ssh-host:
     description: 'ssh host for pax'
     required: false
-  pax_sshPort:
+  pax-ssh-port:
     description: 'ssh port for pax'
     required: false
-  pax_sshCredential:
+  pax-ssh-credential:
     description: 'ssh credential'
     required: false
-  pax_remoteWorkspace:
+  pax-remote-workspace:
     description:  'remote workspace path'
     required: false
-  installRegistry_email:
-    description: 'install registry email'
-    required: false
-  installRegistry_username:
-    description: 'install registry username'
-    required: false
-  installRegistry_password:
-    description: 'install registry password'
-    required: false
-  installRegistry_registry:
-    description: 'install registry url'
-    required: false
-  publishRegistry_email:
-    description: 'publish registry email'
-    required: false
-  publishRegistry_username:
-    description: 'publish registry username'
-    required: false
-  publishRegistry_password:
-    description: 'publish registry password'
-    required: false
-  alwaysUseNpmInstall:
+
+  always-use-npm-install:
     description: 'always use npm install'
     required: false
+    default: 'false'
+  exit-if-folder-not-clean:
+    description: 'exit workflow if git folder not clean'
+    required: false
+  debug:
+    description: 'enable print command'
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -54,13 +72,15 @@ runs:
         node setup.js
       shell: bash
       env:
-        INPUT_PACKAGENAME: ${{ inputs.packageName }}
-        INPUT_NODEJSVERSION: ${{ inputs.nodeJsVersion }}
-        INPUT_PUBLISHREGISTRY_EMAIL: ${{ inputs.publishRegistry_email }}
-        INPUT_PUBLISHREGISTRY_USERNAME: ${{ inputs.publishRegistry_username }}
-        INPUT_PUBLISHREGISTRY_PASSWORD: ${{ inputs.publishRegistry_password }}
-        INPUT_INSTALLREGISTRY_REGISTRY: ${{ inputs.installRegistry_registry }}
-        INPUT_INSTALLREGISTRY_EMAIL: ${{ inputs.installRegistry_email }}
-        INPUT_INSTALLREGISTRY_USERNAME: ${{ inputs.installRegistry_username }}
-        INPUT_INSTALLREGISTRY_PASSWORD: ${{ inputs.installRegistry_password }}
-        INPUT_ALWAYSUSENPMINSTALL: ${{ inputs.alwaysUseNpmInstall }}
+        INPUT_PACKAGE-NAME: ${{ inputs.package-name }}
+        INPUT_NODEJS-VERSION: ${{ inputs.nodejs-version }}
+        INPUT_PUBLISH-REGISTRY-EMAIL: ${{ inputs.publish-registry-email }}
+        INPUT_PUBLISH-REGISTRY-USERNAME: ${{ inputs.publish-registry-username }}
+        INPUT_PUBLISH-REGISTRY-PASSWORD: ${{ inputs.publish-registry-password }}
+        INPUT_INSTALL-REGISTRY-URL: ${{ inputs.install-registry-url }}
+        INPUT_INSTALL-REGISTRY-EMAIL: ${{ inputs.install-registry-email }}
+        INPUT_INSTALL-REGISTRY-USERNAME: ${{ inputs.install-registry-username }}
+        INPUT_INSTALL-REGISTRY-PASSWORD: ${{ inputs.install-registry-password }}
+        INPUT_ALWAYS-USE-NPM-INSTALL: ${{ inputs.always-use-npm-install }}
+        INPUT_EXIT-IF-FOLDER-NOT-CLEAN: ${{ inputs.exit-if-folder-not-clean }}
+        DEBUG: ${{ inputs.debug }}

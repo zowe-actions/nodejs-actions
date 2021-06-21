@@ -8,13 +8,14 @@
  * Copyright IBM Corporation 2021
  */
 
+import core from '@actions/core'
 import fs from 'fs'
 import * as utils from '../common/utils.js';
 const PACKAGE_JSON = 'package.json'
 const NPMRC_FILE = '~/.npmrc'
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org/'
-import InvalidArgumentException from '../common/InvalidArgumentException.js'
-var debug = false
+import InvalidArgumentException from '../common/invalid-argument-exception.js'
+var debug = core.getInput('debug')
 
 class Registry {
     packageJsonFile;
@@ -191,7 +192,7 @@ class Registry {
         }
 
         // debug info: npm configs
-        utils.sh('npm config list', debug)
+        console.log(utils.sh('npm config list', debug))
         
         // get login information
         var whoami = utils.sh('npm whoami --registry '+this.registry, debug)
@@ -223,11 +224,8 @@ class Registry {
         if (this.packageInfo) {
             return this.packageInfo
         }
-
         var info = new Map()
-        
         var packageJsonFileFullPath = process.env.GITHUB_WORKSPACE + '/' + this.packageJsonFile
-
         if (this.packageJsonFile && utils.fileExists(packageJsonFileFullPath)) {
             var pkg = JSON.parse(fs.readFileSync(packageJsonFileFullPath));
             
