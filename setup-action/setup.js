@@ -19,6 +19,7 @@ var installRegistry
 var packageName
 var nodeJsVersion
 var debug = false
+var projectRootPath = process.env.GITHUB_WORKSPACE + '/'
 
 // Get packageName
 packageName = core.getInput('packageName')     
@@ -102,17 +103,29 @@ var packageInfo = publishRegistry.getPackageInfo()
 if (!packageInfo.get('versionTrunks') || packageInfo.get('versionTrunks').get('prerelease'))
     throw new Error('Version defined in package.json shouldn\'t have pre-release string or metadata, pipeline will adjust based on branch and build parameter.')
 console.log('Package information: '+packageName+' v'+packageInfo.get('version'))
-    
-// do we want to use default version of node.js on the build container?
+
+// init nvmShell
 console.log('Pipeline will use node.js '+nodeJsVersion+' to build and test')
-var nvmScript = process.env.HOME + '/.nvm/nvm.sh'
-var cmds = new Array()
-cmds.push('set +x')
-cmds.push('. '+nvmScript)
-cmds.push('nvm install '+nodeJsVersion)
-cmds.push('npm install npm -g')
-cmds.push('npm install yarn -g')
-utils.sh (cmds.join('\n'), debug)
+utils.nvmShellInit(nodeJsVersion)
+
+// Install Node Package Dependencies
+console.log('Install node package dependencies')
+if (utils.fileExists(projectRootPath+'yarn.lock')) {
+    utils.nvmShell('yarn install')
+} else {
+    // we save audit part to next stage
+    var alwaysUseNpmInstall = core.getInput('alwaysUseNpmInstall')
+    if (alwaysUseNpmInstall) {
+        utils.nvmShell('npm install --no-audit')
+    } else {
+        if (utils.fileExists(projectRootPath+'package-lock.json')) {
+            // if we have package-lock.json, try to use everything defined in that file
+            utils.nvmShell('npm ci')
+        } else {
+            utils.nvmShell('npm install --no-audit')
+        }
+    }
+}
 
         //process.env.'artifactory_url');
         //console.log(`Hello ${nameToGreet}!`);

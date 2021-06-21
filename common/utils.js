@@ -30,3 +30,26 @@ export function parseSemanticVersion(version) {
         versionMap.set('prerelease', ''+prerelease[0]+prerelease[1])
     return versionMap
 }
+
+export function nvmShellInit(nodeJsVersion) {
+    var nvmScript = process.env.HOME + '/.nvm/nvm.sh'
+    var cmds = new Array()
+    cmds.push('set +x')
+    cmds.push('. '+nvmScript)
+    cmds.push('nvm install '+nodeJsVersion)
+    cmds.push('npm install npm -g')
+    cmds.push('npm install yarn -g')
+    utils.sh (cmds.join('\n'))
+}
+
+export function nvmShell(nodeJsVersion, scripts) {
+    var nvmScript = process.env.HOME + '/.nvm/nvm.sh'
+    var cmds = new Array()
+    cmds.push('set +x')
+    cmds.push('. '+nvmScript)
+    cmds.push('nvm use '+nodeJsVersion)
+    cmds.push('set -x')
+    for (var eachLine in scripts) {
+        cmds.push(eachLine)
+    }
+}
