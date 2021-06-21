@@ -7,18 +7,6 @@ inputs:
   nodeJsVersion: 
     description: 'nodejs version'
     required: false
-  github_email:
-    description: 'github email'
-    required: false
-  github_usernamePasswordCredential:
-    description: 'github credential'
-    required: false
-  artifactory_url:
-    description: 'artifactory url'
-    required: false
-  artifactory_usernamePasswordCredential:
-    description: 'artifactory credential'
-    required: false
   pax_sshHost:
     description: 'ssh host for pax'
     required: false
@@ -52,11 +40,8 @@ inputs:
   publishRegistry_password:
     description: 'publish registry password'
     required: false
-  disableAudit:
-    description: 'skip audit flag'
-    required: false
-  disableLint:
-    description: 'skip lint flag'
+  alwaysUseNpmInstall:
+    description: 'always use npm install'
     required: false
 
 runs:
@@ -78,3 +63,4 @@ runs:
         INPUT_INSTALLREGISTRY_EMAIL: ${{ inputs.installRegistry_email }}
         INPUT_INSTALLREGISTRY_USERNAME: ${{ inputs.installRegistry_username }}
         INPUT_INSTALLREGISTRY_PASSWORD: ${{ inputs.installRegistry_password }}
+        INPUT_ALWAYSUSENPMINSTALL: ${{ inputs.alwaysUseNpmInstall }}
