@@ -1,7 +1,7 @@
 {
   "name": "nodejs-actions",
   "version": "1.0.0",
-  "description": "",
+  "description": "A project containing all nodejs related pipeline code",
   "type": "module",
   "main": "",
   "scripts": {
@@ -9,18 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zowe-actions/NodeJS-actions.git"
+    "url": "git+https://github.com/zowe-actions/nodejs-actions.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "IBM",
+  "license": "EPL-2.0",
   "bugs": {
-    "url": "https://github.com/zowe-actions/NodeJS-actions/issues"
+    "url": "https://github.com/zowe-actions/nodejs-actions/issues"
   },
-  "homepage": "https://github.com/zowe-actions/NodeJS-actions#readme",
+  "homepage": "https://github.com/zowe-actions/nodejs-actions#readme",
   "dependencies": {
     "@actions/core": "^1.4.0",
-    "@actions/github": "^5.0.0",
-    "semver": "^7.3.5"
+    "debug": "^4.3.2",
+    "npm-registry": "file:npm-registry",
+    "zowe-common": "zowe-actions/zowe-common"
   }
 }

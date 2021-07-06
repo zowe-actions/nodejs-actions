@@ -58,7 +58,7 @@ inputs:
     description: 'exit workflow if git folder not clean'
     required: false
   debug:
-    description: 'enable print command'
+    description: 'enable debug mode'
     required: false
     default: ''
 

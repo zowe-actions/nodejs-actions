@@ -8,14 +8,13 @@
  * Copyright IBM Corporation 2021
  */
 
-import core from '@actions/core'
 import fs from 'fs'
-import * as utils from '../common/utils.js';
+import { InvalidArgumentException , utils } from 'zowe-common'
+import Debug from 'debug'
+const debug = Debug('zowe-actions:nodejs-actions:npm-registry')
 const PACKAGE_JSON = 'package.json'
-const NPMRC_FILE = '~/.npmrc'
+//const NPMRC_FILE = '~/.npmrc'
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org/'
-import InvalidArgumentException from '../common/invalid-argument-exception.js'
-var debug = core.getInput('debug')
 
 class Registry {
     packageJsonFile;
@@ -168,7 +167,7 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            utils.sh(configEntries.join('\n'), debug)
+            debug(utils.sh(configEntries.join('\n')))
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
@@ -188,15 +187,15 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            utils.sh(configEntries.join('\n'), debug)
+            debug(utils.sh(configEntries.join('\n')))
         }
 
         // debug info: npm configs
-        console.log(utils.sh('npm config list', debug))
+        debug(utils.sh('npm config list'))
         
         // get login information
-        var whoami = utils.sh('npm whoami --registry '+this.registry, debug)
-
+        var whoami = utils.sh('npm whoami --registry '+this.registry)
+        debug(whoami)
         return whoami
     }
 
@@ -269,8 +268,8 @@ class Registry {
             console.err('packageJsonFile is not defined or file '+this.packageJsonFile+' doesn\'t not exist.')
         }
         this.packageInfo = info
-        //console.log(info)
+        debug(info)
         return info
     }
 }
-export default Registry; 
+export default Registry;

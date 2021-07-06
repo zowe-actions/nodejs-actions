@@ -9,9 +9,10 @@
  */
 
 import core from '@actions/core'
-import Registry from '../npm/Registry.js'
-import InvalidArgumentException from '../common/invalid-argument-exception.js'
-import * as utils from '../common/utils.js';
+import Registry from 'npm-registry'
+import { InvalidArgumentException , utils } from 'zowe-common'
+import Debug from 'debug'
+const debug = Debug('zowe-actions:nodejs-actions:setup-action')
 
 var publishRegistry
 var installRegistry
@@ -79,7 +80,7 @@ if (irEmail && ((irUsername && irPassword) || irTokenCredential)) {
     console.log(`- ${installRegistry.scope ? '@'+installRegistry.scope+':':''}`+ installRegistry.registry)
     console.log('<<<<<<<<<<<<<<< Done init install registry')
     console.log('\n>>>>>>>>>>>>>>> Login to install registry')
-    console.log(installRegistry.login())
+    installRegistry.login()
     console.log('<<<<<<<<<<<<<<< Done Login to install registry')
 } else {
     if (!irEmail)
@@ -105,25 +106,25 @@ console.log('Package information: '+packageName+' v'+packageInfo.get('version'))
 // init nvmShell
 console.log('Pipeline will use node.js '+nodeJsVersion+' to build and test')
 console.log('\n>>>>>>>>>>>>>>> Initialize nvm shell')
-console.log(utils.nvmShellInit(nodeJsVersion))
+debug(utils.nvmShellInit(nodeJsVersion))
 console.log('<<<<<<<<<<<<<<< Done initialize nvm shell')
 
 // Install Node Package Dependencies
 console.log('\n>>>>>>>>>>>>>>> Install node package dependencies')
 if (utils.fileExists(projectRootPath+'yarn.lock')) {
-    utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'yarn install'])
+    debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'yarn install']))
 } 
 else {
     // we save audit part to next stage
     var alwaysUseNpmInstall = core.getInput('always-use-npm-install')
     if (alwaysUseNpmInstall == 'true') {
-        utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit'])
+        debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
     } else {
         if (utils.fileExists(projectRootPath+'package-lock.json')) {
             // if we have package-lock.json, try to use everything defined in that file
-            utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm ci'])
+            debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm ci']))
         } else {
-            utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit'])
+            debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
         }
     }
 }
@@ -131,6 +132,7 @@ else {
 // debug purpose, sometimes npm install will update package-lock.json
 // since we almost use npm ci all the time, this block of code almost never runs
 var gitStatus = utils.sh('cd '+projectRootPath+';git status --porcelain')
+debug(gitStatus)
 if (gitStatus != '') {
     console.log('======================= WARNING: git folder is not clean =======================\n'
                 + gitStatus+'\n'
@@ -144,10 +146,10 @@ if (gitStatus != '') {
         // we decide to ignore lock files
         if (gitStatus == 'M package-lock.json') {
             console.log('WARNING: package-lock.json will be reset to ignore the failure')
-            utils.sh('cd '+projectRootPath+';git checkout -- package-lock.json')
+            debug(utils.sh('cd '+projectRootPath+';git checkout -- package-lock.json'))
         } else if (gitStatus == 'M yarn.lock') {
             console.log('WARNING: yarn.lock will be reset to ignore the failure')
-            utils.sh('cd '+projectRootPath+';git checkout -- yarn.lock')
+            debug(utils.sh('cd '+projectRootPath+';git checkout -- yarn.lock'))
         }
         else {
             core.setFailed('Git folder is not clean other than lock files after installing dependencies.\nWorkflow aborted')
