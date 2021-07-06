@@ -1,0 +1,63 @@
+name: "nodejs-setup"
+description: "Setup action for NodeJS project"
+inputs:
+  package-name: 
+    description: 'package name'
+    required: true
+  nodejs-version: 
+    description: 'nodejs version'
+    required: true
+
+  install-registry-url:
+    description: 'install registry url'
+    required: true
+  install-registry-email:
+    description: 'install registry email'
+    required: true
+  install-registry-username:
+    description: 'install registry username'
+    required: true
+  install-registry-password:
+    description: 'install registry password'
+    required: true
+  install-registry-token-credential:
+    description: 'install registry token credential'
+    required: false
+
+  publish-registry-email:
+    description: 'publish registry email'
+    required: true
+  publish-registry-username:
+    description: 'publish registry username'
+    required: true
+  publish-registry-password:
+    description: 'publish registry password'
+    required: true
+  publish-registry-token-credential:
+    description: 'publish registry token credential'
+    required: false
+
+  pax-ssh-host:
+    description: 'ssh host for pax'
+    required: false
+  pax-ssh-port:
+    description: 'ssh port for pax'
+    required: false
+  pax-ssh-credential:
+    description: 'ssh credential'
+    required: false
+  pax-remote-workspace:
+    description:  'remote workspace path'
+    required: false
+
+  always-use-npm-install:
+    description: 'always use npm install'
+    required: false
+    default: 'false'
+  exit-if-folder-not-clean:
+    description: 'exit workflow if git folder not clean'
+    required: false
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
