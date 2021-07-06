@@ -63,24 +63,6 @@ inputs:
     default: ''
 
 runs:
-  using: "composite"
-  steps:
-    - run: |
-        cd ${{github.action_path}}/..
-        npm install
-        cd ${{github.action_path}}
-        node setup.js
-      shell: bash
-      env:
-        INPUT_PACKAGE-NAME: ${{ inputs.package-name }}
-        INPUT_NODEJS-VERSION: ${{ inputs.nodejs-version }}
-        INPUT_PUBLISH-REGISTRY-EMAIL: ${{ inputs.publish-registry-email }}
-        INPUT_PUBLISH-REGISTRY-USERNAME: ${{ inputs.publish-registry-username }}
-        INPUT_PUBLISH-REGISTRY-PASSWORD: ${{ inputs.publish-registry-password }}
-        INPUT_INSTALL-REGISTRY-URL: ${{ inputs.install-registry-url }}
-        INPUT_INSTALL-REGISTRY-EMAIL: ${{ inputs.install-registry-email }}
-        INPUT_INSTALL-REGISTRY-USERNAME: ${{ inputs.install-registry-username }}
-        INPUT_INSTALL-REGISTRY-PASSWORD: ${{ inputs.install-registry-password }}
-        INPUT_ALWAYS-USE-NPM-INSTALL: ${{ inputs.always-use-npm-install }}
-        INPUT_EXIT-IF-FOLDER-NOT-CLEAN: ${{ inputs.exit-if-folder-not-clean }}
-        DEBUG: ${{ inputs.debug }}
+  using: 'node12'
+  pre: DEBUG=${{ inputs.debug }}
+  main: 'dist/index.js'
