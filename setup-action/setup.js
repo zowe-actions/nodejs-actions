@@ -8,10 +8,10 @@
  * Copyright IBM Corporation 2021
  */
 
-import core from '@actions/core'
-import Registry from 'npm-registry'
-import { InvalidArgumentException , utils } from 'zowe-common'
-import Debug from 'debug'
+const core = require('@actions/core')
+const Registry = require('npm-registry')
+const { InvalidArgumentException , utils } = require('zowe-common')
+const Debug = require('debug')
 const debug = Debug('zowe-actions:nodejs-actions:setup-action')
 
 var publishRegistry

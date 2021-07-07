@@ -2,7 +2,6 @@
   "name": "nodejs-actions",
   "version": "1.0.0",
   "description": "A project containing all nodejs related pipeline code",
-  "type": "module",
   "main": "",
   "scripts": {
     "test": ""

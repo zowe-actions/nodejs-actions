@@ -4550,119 +4550,19 @@ try {
 
 /***/ }),
 
-/***/ 6221:
-/***/ ((module) => {
+/***/ 386:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = eval("require")("supports-color");
-
-
-/***/ }),
-
-/***/ 5747:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("fs");;
+const utils = __nccwpck_require__(4961)
+const InvalidArgumentException = __nccwpck_require__(1534)
+module.exports.utils = utils
+module.exports.InvalidArgumentException = InvalidArgumentException
 
 /***/ }),
 
-/***/ 2087:
+/***/ 1534:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("os");;
-
-/***/ }),
-
-/***/ 5622:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("path");;
-
-/***/ }),
-
-/***/ 3867:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("tty");;
-
-/***/ }),
-
-/***/ 1669:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("util");;
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __nccwpck_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		var threw = true;
-/******/ 		try {
-/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
-/******/ 			threw = false;
-/******/ 		} finally {
-/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
-/******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/compat */
-/******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-// ESM COMPAT FLAG
-__nccwpck_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ../node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(4562);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(5747);
-;// CONCATENATED MODULE: external "child_process"
-const external_child_process_namespaceObject = require("child_process");;
-// EXTERNAL MODULE: ../node_modules/semver/index.js
-var semver = __nccwpck_require__(4603);
-// EXTERNAL MODULE: ../node_modules/debug/src/index.js
-var src = __nccwpck_require__(8797);
-;// CONCATENATED MODULE: ../node_modules/zowe-common/lib/utils.js
 /*
  * This program and the accompanying materials are made available under the terms of the
  * Eclipse Public License v2.0 which accompanies this distribution, and is available at
@@ -4673,21 +4573,54 @@ var src = __nccwpck_require__(8797);
  * Copyright IBM Corporation 2021
  */
 
+/**
+ * An exception that can be thrown if an argument is invalid or missing.
+ */
 
+class InvalidArgumentException extends Error {
+    /**
+     * Construct the exception.
+     *
+     * @param argument   The argument name which value is invalid.
+     * @param message    The exception message.
+     */
+    constructor(argument, message) {
+        super(message ? message : "Argument " +argument +" is not provided or invalid")
+        this.argument = argument
+    }
+}
+module.exports = InvalidArgumentException; 
 
+/***/ }),
 
+/***/ 4961:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const debug = src('zowe-actions:zowe-common:utils')
+/*
+ * This program and the accompanying materials are made available under the terms of the
+ * Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Copyright IBM Corporation 2021
+ */
+
+const execSync = __nccwpck_require__(3129)
+const fs = __nccwpck_require__(5747)
+const semver = __nccwpck_require__(4603)
+const Debug = __nccwpck_require__(8797)
+const debug = Debug('zowe-actions:zowe-common:utils')
 
 class utils {
     static sh(cmd) {
         debug('sh: $ '+cmd)
-        return (0,external_child_process_namespaceObject.execSync)(cmd).toString().trim()
+        return execSync(cmd).toString().trim()
     }
 
     static fileExists(path) {
         try {
-            external_fs_.accessSync(path, external_fs_.constants.F_OK)
+            fs.accessSync(path, fs.constants.F_OK)
             console.log(path+' does exist')
             return true
         } catch {
@@ -4733,9 +4666,13 @@ class utils {
         return this.sh(cmds.join(' && '))
     }
 }
+module.exports = utils;
 
-/* harmony default export */ const lib_utils = (utils);
-;// CONCATENATED MODULE: ../node_modules/zowe-common/lib/invalid-argument-exception.js
+/***/ }),
+
+/***/ 8463:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
 /*
  * This program and the accompanying materials are made available under the terms of the
  * Eclipse Public License v2.0 which accompanies this distribution, and is available at
@@ -4746,44 +4683,10 @@ class utils {
  * Copyright IBM Corporation 2021
  */
 
-/**
- * An exception that can be thrown if an argument is invalid or missing.
- */
-
-class InvalidArgumentException extends Error {
-    /**
-     * Construct the exception.
-     *
-     * @param argument   The argument name which value is invalid.
-     * @param message    The exception message.
-     */
-    constructor(argument, message) {
-        super(message ? message : "Argument " +argument +" is not provided or invalid")
-        this.argument = argument
-    }
-}
-
-/* harmony default export */ const invalid_argument_exception = (InvalidArgumentException); 
-;// CONCATENATED MODULE: ../node_modules/zowe-common/index.js
-
-
-
-
-;// CONCATENATED MODULE: ../npm-registry/lib/index.js
-/*
- * This program and the accompanying materials are made available under the terms of the
- * Eclipse Public License v2.0 which accompanies this distribution, and is available at
- * https://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Copyright IBM Corporation 2021
- */
-
-
-
-
-const lib_debug = src('zowe-actions:nodejs-actions:npm-registry')
+const fs = __nccwpck_require__(5747)
+const { InvalidArgumentException , utils } = __nccwpck_require__(386)
+const Debug = __nccwpck_require__(8797)
+const debug = Debug('zowe-actions:nodejs-actions:npm-registry')
 const PACKAGE_JSON = 'package.json'
 //const NPMRC_FILE = '~/.npmrc'
 const DEFAULT_REGISTRY = 'https://registry.npmjs.org/'
@@ -4909,7 +4812,7 @@ class Registry {
         } else if (this.registry.startsWith('http://')) {
             registryWithoutProtocol = this.registry.substring(5)
         } else {
-            throw new invalid_argument_exception('registry', 'Unknown registry protocol')
+            throw new InvalidArgumentException('registry', 'Unknown registry protocol')
         }
 
         console.log('Login to: ' + this.registry)
@@ -4939,7 +4842,7 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            lib_debug(lib_utils.sh(configEntries.join('\n')))
+            debug(utils.sh(configEntries.join('\n')))
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
@@ -4959,15 +4862,15 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            lib_debug(lib_utils.sh(configEntries.join('\n')))
+            debug(utils.sh(configEntries.join('\n')))
         }
 
         // debug info: npm configs
-        lib_debug(lib_utils.sh('npm config list'))
+        debug(utils.sh('npm config list'))
         
         // get login information
-        var whoami = lib_utils.sh('npm whoami --registry '+this.registry)
-        lib_debug(whoami)
+        var whoami = utils.sh('npm whoami --registry '+this.registry)
+        debug(whoami)
         return whoami
     }
 
@@ -4997,8 +4900,8 @@ class Registry {
         }
         var info = new Map()
         var packageJsonFileFullPath = process.env.GITHUB_WORKSPACE + '/' + this.packageJsonFile
-        if (this.packageJsonFile && lib_utils.fileExists(packageJsonFileFullPath)) {
-            var pkg = JSON.parse(external_fs_.readFileSync(packageJsonFileFullPath));
+        if (this.packageJsonFile && utils.fileExists(packageJsonFileFullPath)) {
+            var pkg = JSON.parse(fs.readFileSync(packageJsonFileFullPath));
             
             if (pkg) {
                 if (pkg['name']) {
@@ -5016,7 +4919,7 @@ class Registry {
                 }
                 if (pkg['version']) {
                     info.set('version', pkg['version'])
-                    info.set('versionTrunks', lib_utils.parseSemanticVersion(info.get('version')))
+                    info.set('versionTrunks', utils.parseSemanticVersion(info.get('version')))
                 }
                 if (pkg['license']) {
                     info.set('license', pkg['license'])
@@ -5040,12 +4943,109 @@ class Registry {
             console.err('packageJsonFile is not defined or file '+this.packageJsonFile+' doesn\'t not exist.')
         }
         this.packageInfo = info
-        lib_debug(info)
+        debug(info)
         return info
     }
 }
-/* harmony default export */ const lib = (Registry);
-;// CONCATENATED MODULE: ./setup.js
+module.exports = Registry;
+
+/***/ }),
+
+/***/ 6221:
+/***/ ((module) => {
+
+module.exports = eval("require")("supports-color");
+
+
+/***/ }),
+
+/***/ 3129:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");;
+
+/***/ }),
+
+/***/ 5747:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs");;
+
+/***/ }),
+
+/***/ 2087:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("os");;
+
+/***/ }),
+
+/***/ 5622:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("path");;
+
+/***/ }),
+
+/***/ 3867:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("tty");;
+
+/***/ }),
+
+/***/ 1669:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("util");;
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __nccwpck_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		var threw = true;
+/******/ 		try {
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
+/******/ 			threw = false;
+/******/ 		} finally {
+/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
+/******/ 		}
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat */
+/******/ 	
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
 /*
  * This program and the accompanying materials are made available under the terms of the
  * Eclipse Public License v2.0 which accompanies this distribution, and is available at
@@ -5056,11 +5056,11 @@ class Registry {
  * Copyright IBM Corporation 2021
  */
 
-
-
-
-
-const setup_debug = src('zowe-actions:nodejs-actions:setup-action')
+const core = __nccwpck_require__(4562)
+const Registry = __nccwpck_require__(8463)
+const { InvalidArgumentException , utils } = __nccwpck_require__(386)
+const Debug = __nccwpck_require__(8797)
+const debug = Debug('zowe-actions:nodejs-actions:setup-action')
 
 var publishRegistry
 var installRegistry
@@ -5071,12 +5071,12 @@ var projectRootPath = process.env.GITHUB_WORKSPACE + '/'
 // Get packageName
 packageName = core.getInput('package-name')     
 if (!packageName) 
-    throw new invalid_argument_exception('packageName')
+    throw new InvalidArgumentException('packageName')
 
 // Get nodejs version
 nodeJsVersion = core.getInput('nodejs-version')
 if (!nodeJsVersion)
-    throw new invalid_argument_exception('nodeJsVersion')
+    throw new InvalidArgumentException('nodeJsVersion')
 
 // Making publishRegistry
 var prEmail = core.getInput('publish-registry-email')
@@ -5090,22 +5090,22 @@ if (prEmail && ((prUsername && prPassword) || prTokenCredential)) {
     args.set('username', prUsername)
     args.set('password', prPassword)
     args.set('tokenCredential', prTokenCredential)
-    publishRegistry = new lib(args)
+    publishRegistry = new Registry(args)
     // try to extract publish registry from package.json
     publishRegistry.initFromPackageJson(args)
     console.log(`- ${publishRegistry.scope ? '@'+publishRegistry.scope+':':''}${publishRegistry.registry ? publishRegistry.registry:'(WARNING: undefined publish registry)'}`)
     console.log('<<<<<<<<<<<<<<< Done init publish registry')
 } else {         
     if (!prEmail)
-        throw new invalid_argument_exception('publish-registry-email')
+        throw new InvalidArgumentException('publish-registry-email')
     if (!prTokenCredential) {
         if (prUsername || prPassword) {
             if (!prUsername)
-                throw new invalid_argument_exception('publish-registry-username')
+                throw new InvalidArgumentException('publish-registry-username')
             if (!prPassword)
-                throw new invalid_argument_exception('publish-registry-password')
+                throw new InvalidArgumentException('publish-registry-password')
         } else {
-            throw new invalid_argument_exception('Either provide token for publish registry or username/password pair')
+            throw new InvalidArgumentException('Either provide token for publish registry or username/password pair')
         }
     }
 }
@@ -5124,7 +5124,7 @@ if (irEmail && ((irUsername && irPassword) || irTokenCredential)) {
     args.set('password', irPassword)
     args.set('tokenCredential', irTokenCredential)
     args.set('registry', irUrl)
-    installRegistry = new lib(args)
+    installRegistry = new Registry(args)
     console.log(`- ${installRegistry.scope ? '@'+installRegistry.scope+':':''}`+ installRegistry.registry)
     console.log('<<<<<<<<<<<<<<< Done init install registry')
     console.log('\n>>>>>>>>>>>>>>> Login to install registry')
@@ -5132,55 +5132,55 @@ if (irEmail && ((irUsername && irPassword) || irTokenCredential)) {
     console.log('<<<<<<<<<<<<<<< Done Login to install registry')
 } else {
     if (!irEmail)
-        throw new invalid_argument_exception('install-registry-email')
+        throw new InvalidArgumentException('install-registry-email')
     if (!irTokenCredential) {
         if (irUsername || irPassword) {
             if (!irUsername)
-                throw new invalid_argument_exception('install-registry-username')
+                throw new InvalidArgumentException('install-registry-username')
             if (!irPassword)
-                throw new invalid_argument_exception('install-registry-password')
+                throw new InvalidArgumentException('install-registry-password')
         } else {
-            throw new invalid_argument_exception('Either provide token for install registry or username/password pair')
+            throw new InvalidArgumentException('Either provide token for install registry or username/password pair')
         }
     }
 }
 
 // Init package info from package.json
-var setup_packageInfo = publishRegistry.getPackageInfo()
-if (!setup_packageInfo.get('versionTrunks') || setup_packageInfo.get('versionTrunks').get('prerelease'))
+var packageInfo = publishRegistry.getPackageInfo()
+if (!packageInfo.get('versionTrunks') || packageInfo.get('versionTrunks').get('prerelease'))
     throw new Error('Version defined in package.json shouldn\'t have pre-release string or metadata, pipeline will adjust based on branch and build parameter.')
-console.log('Package information: '+packageName+' v'+setup_packageInfo.get('version'))
+console.log('Package information: '+packageName+' v'+packageInfo.get('version'))
 
 // init nvmShell
 console.log('Pipeline will use node.js '+nodeJsVersion+' to build and test')
 console.log('\n>>>>>>>>>>>>>>> Initialize nvm shell')
-setup_debug(lib_utils.nvmShellInit(nodeJsVersion))
+debug(utils.nvmShellInit(nodeJsVersion))
 console.log('<<<<<<<<<<<<<<< Done initialize nvm shell')
 
 // Install Node Package Dependencies
 console.log('\n>>>>>>>>>>>>>>> Install node package dependencies')
-if (lib_utils.fileExists(projectRootPath+'yarn.lock')) {
-    setup_debug(lib_utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'yarn install']))
+if (utils.fileExists(projectRootPath+'yarn.lock')) {
+    debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'yarn install']))
 } 
 else {
     // we save audit part to next stage
     var alwaysUseNpmInstall = core.getInput('always-use-npm-install')
     if (alwaysUseNpmInstall == 'true') {
-        setup_debug(lib_utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
+        debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
     } else {
-        if (lib_utils.fileExists(projectRootPath+'package-lock.json')) {
+        if (utils.fileExists(projectRootPath+'package-lock.json')) {
             // if we have package-lock.json, try to use everything defined in that file
-            setup_debug(lib_utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm ci']))
+            debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm ci']))
         } else {
-            setup_debug(lib_utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
+            debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
         }
     }
 }
 
 // debug purpose, sometimes npm install will update package-lock.json
 // since we almost use npm ci all the time, this block of code almost never runs
-var gitStatus = lib_utils.sh('cd '+projectRootPath+';git status --porcelain')
-setup_debug(gitStatus)
+var gitStatus = utils.sh('cd '+projectRootPath+';git status --porcelain')
+debug(gitStatus)
 if (gitStatus != '') {
     console.log('======================= WARNING: git folder is not clean =======================\n'
                 + gitStatus+'\n'
@@ -5194,10 +5194,10 @@ if (gitStatus != '') {
         // we decide to ignore lock files
         if (gitStatus == 'M package-lock.json') {
             console.log('WARNING: package-lock.json will be reset to ignore the failure')
-            setup_debug(lib_utils.sh('cd '+projectRootPath+';git checkout -- package-lock.json'))
+            debug(utils.sh('cd '+projectRootPath+';git checkout -- package-lock.json'))
         } else if (gitStatus == 'M yarn.lock') {
             console.log('WARNING: yarn.lock will be reset to ignore the failure')
-            setup_debug(lib_utils.sh('cd '+projectRootPath+';git checkout -- yarn.lock'))
+            debug(utils.sh('cd '+projectRootPath+';git checkout -- yarn.lock'))
         }
         else {
             core.setFailed('Git folder is not clean other than lock files after installing dependencies.\nWorkflow aborted')

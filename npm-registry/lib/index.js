@@ -8,9 +8,9 @@
  * Copyright IBM Corporation 2021
  */
 
-import fs from 'fs'
-import { InvalidArgumentException , utils } from 'zowe-common'
-import Debug from 'debug'
+const fs = require('fs')
+const { InvalidArgumentException , utils } = require('zowe-common')
+const Debug = require('debug')
 const debug = Debug('zowe-actions:nodejs-actions:npm-registry')
 const PACKAGE_JSON = 'package.json'
 //const NPMRC_FILE = '~/.npmrc'
@@ -272,4 +272,4 @@ class Registry {
         return info
     }
 }
-export default Registry;
+module.exports = Registry;
