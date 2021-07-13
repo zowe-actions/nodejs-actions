@@ -37,19 +37,6 @@ inputs:
     description: 'publish registry token credential'
     required: false
 
-  pax-ssh-host:
-    description: 'ssh host for pax'
-    required: false
-  pax-ssh-port:
-    description: 'ssh port for pax'
-    required: false
-  pax-ssh-credential:
-    description: 'ssh credential'
-    required: false
-  pax-remote-workspace:
-    description:  'remote workspace path'
-    required: false
-
   always-use-npm-install:
     description: 'always use npm install'
     required: false
