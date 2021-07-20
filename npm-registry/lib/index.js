@@ -167,7 +167,9 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            debug(utils.sh(configEntries.join('\n')))
+            var cmds = configEntries.join('\n')
+            debug(cmds)
+            debug(utils.sh(cmds))
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
@@ -187,16 +189,22 @@ class Registry {
             } else {
                 configEntries.push('npm config set registry '+this.registry)
             }
-            debug(utils.sh(configEntries.join('\n')))
+            var cmds = configEntries.join('\n')
+            debug(cmds)
+            debug(utils.sh(cmds))
         }
 
         // debug info: npm configs
-        debug(utils.sh('npm config list'))
+        var cmds = 'npm config list'
+        debug(cmds)
+        debug(utils.sh(cmds))
         
         // get login information
-        var whoami = utils.sh('npm whoami --registry '+this.registry)
-        debug(whoami)
-        return whoami
+        var cmds = 'npm whoami --registry ' + this.registry
+        debug(cmds)
+        var out = utils.sh(cmds)
+        debug(out)
+        return out
     }
 
     /**

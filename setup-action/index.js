@@ -157,7 +157,3 @@ if (gitStatus != '') {
     }
 }
 console.log('\n<<<<<<<<<<<<<<< Done install node package dependencies')
-
-        //process.env.'artifactory_url');
-        //console.log(`Hello ${nameToGreet}!`);
-        //core.setOutput("time", time);
