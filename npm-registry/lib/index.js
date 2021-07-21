@@ -140,7 +140,7 @@ class Registry {
             throw new InvalidArgumentException('registry', 'Unknown registry protocol')
         }
 
-        console.log('Login to: ' + this.registry)
+        console.log(`Login to: ${this.registry}`)
 
         // create if it's not existed
         // backup current .npmrc
@@ -155,17 +155,17 @@ class Registry {
         // update auth in .npmrc
         if (this.tokenCredential) {
             var configEntries = new Array()
-            configEntries.push('set +x')
-            configEntries.push('npm config set _auth '+ this.tokenCredential)
-            configEntries.push('npm config set email '+ this.email)
-            configEntries.push('npm config set always-auth true')
+            configEntries.push(`set +x`)
+            configEntries.push(`npm config set _auth ${this.tokenCredential}`)
+            configEntries.push(`npm config set email ${this.email}`)
+            configEntries.push(`npm config set always-auth true`)
             if (this.scope) {
-                configEntries.push('npm config set @'+ this.scope + ':registry '+this.registry)
-                configEntries.push('npm config set '+ registryWithoutProtocol+ ':_authToken '+this.tokenCredential)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':email '+this.email)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':always-auth true')
+                configEntries.push(`npm config set @${this.scope}:registry ${this.registry}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:_authToken ${this.tokenCredential}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:email ${this.email}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:always-auth true`)
             } else {
-                configEntries.push('npm config set registry '+this.registry)
+                configEntries.push(`npm config set registry ${this.registry}`)
             }
             var cmds = configEntries.join('\n')
             debug(cmds)
@@ -173,21 +173,21 @@ class Registry {
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
-            var usernamePasswordString = this.username+':'+this.password
+            var usernamePasswordString = `${this.username}:${this.password}`
             var base64UsernamePassword = Buffer.from(usernamePasswordString).toString('base64')
             var configEntries = new Array()
-            configEntries.push('set +x')
-            configEntries.push('npm config set _auth '+ base64UsernamePassword)
-            configEntries.push('npm config set email '+ this.email)
-            configEntries.push('npm config set always-auth true')
+            configEntries.push(`set +x`)
+            configEntries.push(`npm config set _auth ${base64UsernamePassword}`)
+            configEntries.push(`npm config set email ${this.email}`)
+            configEntries.push(`npm config set always-auth true`)
             if (this.scope) {
-                configEntries.push('npm config set @'+ this.scope + ':registry '+this.registry)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':username '+this.username)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':_password '+base64Password)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':email '+this.email)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':always-auth true')
+                configEntries.push(`npm config set @${this.scope}:registry ${this.registry}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:username ${this.username}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:_password ${base64Password}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:email ${this.email}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:always-auth true`)
             } else {
-                configEntries.push('npm config set registry '+this.registry)
+                configEntries.push(`npm config set registry ${this.registry}`)
             }
             var cmds = configEntries.join('\n')
             debug(cmds)
@@ -195,12 +195,12 @@ class Registry {
         }
 
         // debug info: npm configs
-        var cmds = 'npm config list'
+        var cmds = `npm config list`
         debug(cmds)
         debug(utils.sh(cmds))
         
         // get login information
-        var cmds = 'npm whoami --registry ' + this.registry
+        var cmds = `npm whoami --registry ${this.registry}`
         debug(cmds)
         var out = utils.sh(cmds)
         debug(out)
@@ -232,7 +232,7 @@ class Registry {
             return this.packageInfo
         }
         var info = new Map()
-        var packageJsonFileFullPath = process.env.GITHUB_WORKSPACE + '/' + this.packageJsonFile
+        var packageJsonFileFullPath = `${process.env.GITHUB_WORKSPACE}/${this.packageJsonFile}`
         if (this.packageJsonFile && utils.fileExists(packageJsonFileFullPath)) {
             var pkg = JSON.parse(fs.readFileSync(packageJsonFileFullPath));
             
@@ -273,7 +273,7 @@ class Registry {
                 }
             }
         } else {
-            console.err('packageJsonFile is not defined or file '+this.packageJsonFile+' doesn\'t not exist.')
+            console.err(`packageJsonFile is not defined or file ${this.packageJsonFile} doesn't not exist.`)
         }
         this.packageInfo = info
         debug(info)
