@@ -4671,6 +4671,20 @@ class utils {
                        .toLowerCase()
         return branch
     }
+
+    static sftp(host, port, username, passwd, cmds) {
+        var fullCMD = `SSHPASS=${passwd} sshpass -e sftp -o BatchMode=no -o StrictHostKeyChecking=no -P ${port} -b - ${username}@${host}
+${cmds}
+`
+        return utils.sh(fullCMD)
+    }
+
+    static ssh(host, port, username, passwd, cmds) {
+        var fullCMD = `SSHPASS=${passwd} sshpass -e ssh -tt -o StrictHostKeyChecking=no -p ${port} ${username}@${host}
+${cmds}
+`
+        return utils.sh(fullCMD)
+    }
 }
 module.exports = utils;
 
@@ -4821,7 +4835,7 @@ class Registry {
             throw new InvalidArgumentException('registry', 'Unknown registry protocol')
         }
 
-        console.log('Login to: ' + this.registry)
+        console.log(`Login to: ${this.registry}`)
 
         // create if it's not existed
         // backup current .npmrc
@@ -4836,17 +4850,17 @@ class Registry {
         // update auth in .npmrc
         if (this.tokenCredential) {
             var configEntries = new Array()
-            configEntries.push('set +x')
-            configEntries.push('npm config set _auth '+ this.tokenCredential)
-            configEntries.push('npm config set email '+ this.email)
-            configEntries.push('npm config set always-auth true')
+            configEntries.push(`set +x`)
+            configEntries.push(`npm config set _auth ${this.tokenCredential}`)
+            configEntries.push(`npm config set email ${this.email}`)
+            configEntries.push(`npm config set always-auth true`)
             if (this.scope) {
-                configEntries.push('npm config set @'+ this.scope + ':registry '+this.registry)
-                configEntries.push('npm config set '+ registryWithoutProtocol+ ':_authToken '+this.tokenCredential)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':email '+this.email)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':always-auth true')
+                configEntries.push(`npm config set @${this.scope}:registry ${this.registry}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:_authToken ${this.tokenCredential}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:email ${this.email}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:always-auth true`)
             } else {
-                configEntries.push('npm config set registry '+this.registry)
+                configEntries.push(`npm config set registry ${this.registry}`)
             }
             var cmds = configEntries.join('\n')
             debug(cmds)
@@ -4854,21 +4868,21 @@ class Registry {
 
         } else if (this.username && this.password) {
             var base64Password = Buffer.from(this.password).toString('base64')
-            var usernamePasswordString = this.username+':'+this.password
+            var usernamePasswordString = `${this.username}:${this.password}`
             var base64UsernamePassword = Buffer.from(usernamePasswordString).toString('base64')
             var configEntries = new Array()
-            configEntries.push('set +x')
-            configEntries.push('npm config set _auth '+ base64UsernamePassword)
-            configEntries.push('npm config set email '+ this.email)
-            configEntries.push('npm config set always-auth true')
+            configEntries.push(`set +x`)
+            configEntries.push(`npm config set _auth ${base64UsernamePassword}`)
+            configEntries.push(`npm config set email ${this.email}`)
+            configEntries.push(`npm config set always-auth true`)
             if (this.scope) {
-                configEntries.push('npm config set @'+ this.scope + ':registry '+this.registry)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':username '+this.username)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':_password '+base64Password)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':email '+this.email)
-                configEntries.push('npm config set '+registryWithoutProtocol+ ':always-auth true')
+                configEntries.push(`npm config set @${this.scope}:registry ${this.registry}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:username ${this.username}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:_password ${base64Password}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:email ${this.email}`)
+                configEntries.push(`npm config set ${registryWithoutProtocol}:always-auth true`)
             } else {
-                configEntries.push('npm config set registry '+this.registry)
+                configEntries.push(`npm config set registry ${this.registry}`)
             }
             var cmds = configEntries.join('\n')
             debug(cmds)
@@ -4876,12 +4890,12 @@ class Registry {
         }
 
         // debug info: npm configs
-        var cmds = 'npm config list'
+        var cmds = `npm config list`
         debug(cmds)
         debug(utils.sh(cmds))
         
         // get login information
-        var cmds = 'npm whoami --registry ' + this.registry
+        var cmds = `npm whoami --registry ${this.registry}`
         debug(cmds)
         var out = utils.sh(cmds)
         debug(out)
@@ -4913,7 +4927,7 @@ class Registry {
             return this.packageInfo
         }
         var info = new Map()
-        var packageJsonFileFullPath = process.env.GITHUB_WORKSPACE + '/' + this.packageJsonFile
+        var packageJsonFileFullPath = `${process.env.GITHUB_WORKSPACE}/${this.packageJsonFile}`
         if (this.packageJsonFile && utils.fileExists(packageJsonFileFullPath)) {
             var pkg = JSON.parse(fs.readFileSync(packageJsonFileFullPath));
             
@@ -4954,7 +4968,7 @@ class Registry {
                 }
             }
         } else {
-            console.err('packageJsonFile is not defined or file '+this.packageJsonFile+' doesn\'t not exist.')
+            console.err(`packageJsonFile is not defined or file ${this.packageJsonFile} doesn't not exist.`)
         }
         this.packageInfo = info
         debug(info)
@@ -5080,7 +5094,7 @@ var publishRegistry
 var installRegistry
 var packageName
 var nodeJsVersion
-var projectRootPath = process.env.GITHUB_WORKSPACE + '/'
+var projectRootPath = process.env.GITHUB_WORKSPACE
 
 // Get packageName
 packageName = core.getInput('package-name')     
@@ -5163,42 +5177,43 @@ if (irEmail && ((irUsername && irPassword) || irTokenCredential)) {
 var packageInfo = publishRegistry.getPackageInfo()
 if (!packageInfo.get('versionTrunks') || packageInfo.get('versionTrunks').get('prerelease'))
     throw new Error('Version defined in package.json shouldn\'t have pre-release string or metadata, pipeline will adjust based on branch and build parameter.')
-console.log('Package information: '+packageName+' v'+packageInfo.get('version'))
+console.log(`Package information: ${packageName} v${packageInfo.get('version')}`)
 
 // init nvmShell
-console.log('Pipeline will use node.js '+nodeJsVersion+' to build and test')
+console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)
 console.log('\n>>>>>>>>>>>>>>> Initialize nvm shell')
 debug(utils.nvmShellInit(nodeJsVersion))
 console.log('<<<<<<<<<<<<<<< Done initialize nvm shell')
 
 // Install Node Package Dependencies
 console.log('\n>>>>>>>>>>>>>>> Install node package dependencies')
-if (utils.fileExists(projectRootPath+'yarn.lock')) {
-    debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'yarn install']))
+if (utils.fileExists(`${projectRootPath}/yarn.lock`)) {
+    debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'yarn install']))
 } 
 else {
     // we save audit part to next stage
     var alwaysUseNpmInstall = core.getInput('always-use-npm-install')
     if (alwaysUseNpmInstall == 'true') {
-        debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
+        debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'npm install --no-audit']))
     } else {
-        if (utils.fileExists(projectRootPath+'package-lock.json')) {
+        if (utils.fileExists(`${projectRootPath}/package-lock.json`)) {
             // if we have package-lock.json, try to use everything defined in that file
-            debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm ci']))
+            debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'npm ci']))
         } else {
-            debug(utils.nvmShell(nodeJsVersion, ['cd '+projectRootPath,'npm install --no-audit']))
+            debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'npm install --no-audit']))
         }
     }
 }
 
 // debug purpose, sometimes npm install will update package-lock.json
 // since we almost use npm ci all the time, this block of code almost never runs
-var gitStatus = utils.sh('cd '+projectRootPath+';git status --porcelain')
+var gitStatus = utils.sh(`cd ${projectRootPath};git status --porcelain`)
 debug(gitStatus)
 if (gitStatus != '') {
-    console.log('======================= WARNING: git folder is not clean =======================\n'
-                + gitStatus+'\n'
-                + '============ This may cause fail to publish artifact in later stage ============'
+    console.log(`======================= WARNING: git folder is not clean =======================
+${gitStatus}
+============ This may cause fail to publish artifact in later stage ============
+`
     )
     var exitIfFolderNotClean = core.getInput('exit-if-folder-not-clean')
     if (exitIfFolderNotClean) {
@@ -5208,10 +5223,10 @@ if (gitStatus != '') {
         // we decide to ignore lock files
         if (gitStatus == 'M package-lock.json') {
             console.log('WARNING: package-lock.json will be reset to ignore the failure')
-            debug(utils.sh('cd '+projectRootPath+';git checkout -- package-lock.json'))
+            debug(utils.sh(`cd ${projectRootPath};git checkout -- package-lock.json`))
         } else if (gitStatus == 'M yarn.lock') {
             console.log('WARNING: yarn.lock will be reset to ignore the failure')
-            debug(utils.sh('cd '+projectRootPath+';git checkout -- yarn.lock'))
+            debug(utils.sh(`cd ${projectRootPath};git checkout -- yarn.lock`))
         }
         else {
             core.setFailed('Git folder is not clean other than lock files after installing dependencies.\nWorkflow aborted')
