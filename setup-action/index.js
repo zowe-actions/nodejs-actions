@@ -103,6 +103,14 @@ if (!packageInfo.get('versionTrunks') || packageInfo.get('versionTrunks').get('p
     throw new Error('Version defined in package.json shouldn\'t have pre-release string or metadata, pipeline will adjust based on branch and build parameter.')
 console.log(`Package information: ${packageName} v${packageInfo.get('version')}`)
 
+// export packageInfo to a json string
+// first need to convert from Map to json object
+var json = {}
+packageInfo.forEach((value,key) => {    
+    json[key]=value
+})
+core.setOutput('package-info-json-text',JSON.stringify(json))
+
 // init nvmShell
 console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)
 console.log('\n>>>>>>>>>>>>>>> Initialize nvm shell')
