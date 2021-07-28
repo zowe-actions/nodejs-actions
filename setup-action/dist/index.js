@@ -4553,12 +4553,58 @@ try {
 /***/ 386:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+module.exports.utils = __nccwpck_require__(4961)
+module.exports.InvalidArgumentException = __nccwpck_require__(1534)
+module.exports.pax = __nccwpck_require__(6518)
+module.exports.github = __nccwpck_require__(3822)
+
+
+/***/ }),
+
+/***/ 3822:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+/*
+ * This program and the accompanying materials are made available under the terms of the
+ * Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Copyright IBM Corporation 2021
+ */
+
 const utils = __nccwpck_require__(4961)
-const InvalidArgumentException = __nccwpck_require__(1534)
-const pax = __nccwpck_require__(6518)
-module.exports.utils = utils
-module.exports.InvalidArgumentException = InvalidArgumentException
-module.exports.pax = pax
+
+class github {
+    
+    /**
+     * Validate if a tag exists in remote.
+     *
+     * @Example
+     * <pre>
+     *     if (github.tagExistsRemote('v1.2.3')) {
+     *         echo "Tag v1.2.3 already exists in remote."
+     *     }
+     * </pre>
+     *
+     * @param tag     tag name to check
+     * @return        true/false
+     */
+    static tagExistsRemote(tag) {
+        var remotedTags = utils.sh('git ls-remote --tags').split("\n")
+        var foundTag = false
+
+        remotedTags.forEach(eachtag => {
+            if (eachtag.endsWith(`refs/tags/${tag}`)) { 
+                foundTag = true 
+            }
+        })
+        return foundTag
+    }
+}
+
+module.exports = github;
 
 /***/ }),
 
@@ -4856,6 +4902,7 @@ fi
                 cmds.push(prepareWorkspaceScriptFullPath)
                 debug(cmds.join(' '))
                 console.log(utils.sh(cmds.join(' ')))    //use console to print output
+                console.log('prepare workspace completed')
             }
             console.log(utils.sh(`echo ${func} packaging contents: && find ${paxLocalWorkspace} -print`))
             
@@ -4869,18 +4916,16 @@ fi
             }
 
             // tar the whole workspace folder
-            console.log(utils.sh(`tar -c -f ${packageTar} -C ${paxLocalWorkspace} .`))
+            debug(utils.sh(`tar -c -f ${packageTar} -C ${paxLocalWorkspace} .`))
             fs.writeFileSync(packageScriptFile, packageScriptContent)
         } catch (ex0) {
             throw new Error(`Failed to prepare packaging workspace: ${ex0}`)
         }
 
-            
         try {
             // Step 1: send to pax server
             var cmd = `put ${packageTar} ${paxRemoteWorkspace}
 put ${packageScriptFile} ${paxRemoteWorkspace}`
-            debug(cmd)
             debug(utils.sftp(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd))
             console.log(`[Step 1]: sftp put ${packageTar} and ${packageScriptFile} completed`)
 
@@ -4890,7 +4935,6 @@ mv ${paxRemoteWorkspace}/${packageScriptFile}.new ${paxRemoteWorkspace}/${packag
 chmod +x ${paxRemoteWorkspace}/${packageScriptFile}
 . ${paxRemoteWorkspace}/${packageScriptFile}
 rm ${paxRemoteWorkspace}/${packageScriptFile}`
-            debug(cmd2)
             console.log(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd2))
             console.log('[Step 2]: extract tar file, run pre/post hooks and create pax file completed')
 
@@ -4902,7 +4946,6 @@ get ${remoteWorkspaceFullPath}/${file} ${paxLocalWorkspace}`
             )
             var cmd3 = `get ${remoteWorkspaceFullPath}/${compressPax ? filePaxZ : filePax} ${paxLocalWorkspace}`
             cmd3 += extraGets
-            debug(cmd3)
             debug(utils.sftp(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd3))
             console.log('[Step 3]: copy back files completed')
         } catch (ex1) {
@@ -4929,8 +4972,7 @@ echo "${func}[ERROR] failed on catch-all hook"
 exit 1
 fi
 fi`
-                    debug(cmd4)
-                    console.log(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd4))  //need to always print because echo presents in the cmd4
+                    debug(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd4))
                 } catch (ex3) {
                     // ignore errors for cleaning up
                     console.warn(`${func} running catch-all hooks failed: ${ex3}`)
@@ -4940,8 +4982,8 @@ fi`
                     // always clean up temporary files/folders
                     console.log(`${func} cleaning up remote workspace...`)
                     var cmdCleaning = `rm -fr ${remoteWorkspaceFullPath}*`
-                    var resultCleaning = utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmdCleaning)
-                    console.log(`${func} cleaning up remote workspace success, returns: ${resultCleaning}`)
+                    debug(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmdCleaning))
+                    console.log(`${func} cleaning up remote workspace success`)
                 } catch (ex2) {
                     // ignore errors for cleaning up
                     console.warn(`${func} cleaning up remote workspace failed: ${ex2}`)
@@ -4974,6 +5016,11 @@ const fs = __nccwpck_require__(5747)
 const semver = __nccwpck_require__(4603)
 
 class utils {
+
+    static dateTimeNow() {
+        return (new Date()).toISOString().split('.')[0].replace(/[^0-9]/g, "")
+    }
+
     static sh(cmd) {
         return execSync(cmd).toString().trim()
     }
@@ -4987,6 +5034,36 @@ class utils {
             console.warn(`${path} does not exist`)
             return false
         }
+    }
+
+    static parseFileExtension(file) {
+        var result = new Map()
+        var KNOWN_DOUBLE_EXTS = ['.tar.gz', '.pax.Z']
+
+        var baseName = file.lastIndexOf('/') != -1 ? file.substring(file.lastIndexOf('/')+1) : file
+
+        var idx = -1
+
+        // some file names end with .tar.gz we want to keep
+        KNOWN_DOUBLE_EXTS.forEach( ext => {
+            if (baseName.endsWith(ext)) {
+                idx = baseName.length - ext.length
+            }
+        })
+
+        if (idx == -1) {
+            idx = baseName.lastIndexOf('.')
+        }
+
+        if (idx != -1) {
+            result.set('name', baseName.substring(0,idx))
+            result.set('ext', baseName.substring(idx))
+        } else {
+            result.set('name', baseName)
+            result.set('ext', '')
+        }
+
+        return result
     }
 
     static parseSemanticVersion(version) {
@@ -9428,12 +9505,58 @@ try {
 /***/ 8197:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+module.exports.utils = __nccwpck_require__(4621)
+module.exports.InvalidArgumentException = __nccwpck_require__(2327)
+module.exports.pax = __nccwpck_require__(7302)
+module.exports.github = __nccwpck_require__(2356)
+
+
+/***/ }),
+
+/***/ 2356:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+/*
+ * This program and the accompanying materials are made available under the terms of the
+ * Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Copyright IBM Corporation 2021
+ */
+
 const utils = __nccwpck_require__(4621)
-const InvalidArgumentException = __nccwpck_require__(2327)
-const pax = __nccwpck_require__(7302)
-module.exports.utils = utils
-module.exports.InvalidArgumentException = InvalidArgumentException
-module.exports.pax = pax
+
+class github {
+    
+    /**
+     * Validate if a tag exists in remote.
+     *
+     * @Example
+     * <pre>
+     *     if (github.tagExistsRemote('v1.2.3')) {
+     *         echo "Tag v1.2.3 already exists in remote."
+     *     }
+     * </pre>
+     *
+     * @param tag     tag name to check
+     * @return        true/false
+     */
+    static tagExistsRemote(tag) {
+        var remotedTags = utils.sh('git ls-remote --tags').split("\n")
+        var foundTag = false
+
+        remotedTags.forEach(eachtag => {
+            if (eachtag.endsWith(`refs/tags/${tag}`)) { 
+                foundTag = true 
+            }
+        })
+        return foundTag
+    }
+}
+
+module.exports = github;
 
 /***/ }),
 
@@ -9731,6 +9854,7 @@ fi
                 cmds.push(prepareWorkspaceScriptFullPath)
                 debug(cmds.join(' '))
                 console.log(utils.sh(cmds.join(' ')))    //use console to print output
+                console.log('prepare workspace completed')
             }
             console.log(utils.sh(`echo ${func} packaging contents: && find ${paxLocalWorkspace} -print`))
             
@@ -9744,18 +9868,16 @@ fi
             }
 
             // tar the whole workspace folder
-            console.log(utils.sh(`tar -c -f ${packageTar} -C ${paxLocalWorkspace} .`))
+            debug(utils.sh(`tar -c -f ${packageTar} -C ${paxLocalWorkspace} .`))
             fs.writeFileSync(packageScriptFile, packageScriptContent)
         } catch (ex0) {
             throw new Error(`Failed to prepare packaging workspace: ${ex0}`)
         }
 
-            
         try {
             // Step 1: send to pax server
             var cmd = `put ${packageTar} ${paxRemoteWorkspace}
 put ${packageScriptFile} ${paxRemoteWorkspace}`
-            debug(cmd)
             debug(utils.sftp(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd))
             console.log(`[Step 1]: sftp put ${packageTar} and ${packageScriptFile} completed`)
 
@@ -9765,7 +9887,6 @@ mv ${paxRemoteWorkspace}/${packageScriptFile}.new ${paxRemoteWorkspace}/${packag
 chmod +x ${paxRemoteWorkspace}/${packageScriptFile}
 . ${paxRemoteWorkspace}/${packageScriptFile}
 rm ${paxRemoteWorkspace}/${packageScriptFile}`
-            debug(cmd2)
             console.log(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd2))
             console.log('[Step 2]: extract tar file, run pre/post hooks and create pax file completed')
 
@@ -9777,7 +9898,6 @@ get ${remoteWorkspaceFullPath}/${file} ${paxLocalWorkspace}`
             )
             var cmd3 = `get ${remoteWorkspaceFullPath}/${compressPax ? filePaxZ : filePax} ${paxLocalWorkspace}`
             cmd3 += extraGets
-            debug(cmd3)
             debug(utils.sftp(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd3))
             console.log('[Step 3]: copy back files completed')
         } catch (ex1) {
@@ -9804,8 +9924,7 @@ echo "${func}[ERROR] failed on catch-all hook"
 exit 1
 fi
 fi`
-                    debug(cmd4)
-                    console.log(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd4))  //need to always print because echo presents in the cmd4
+                    debug(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmd4))
                 } catch (ex3) {
                     // ignore errors for cleaning up
                     console.warn(`${func} running catch-all hooks failed: ${ex3}`)
@@ -9815,8 +9934,8 @@ fi`
                     // always clean up temporary files/folders
                     console.log(`${func} cleaning up remote workspace...`)
                     var cmdCleaning = `rm -fr ${remoteWorkspaceFullPath}*`
-                    var resultCleaning = utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmdCleaning)
-                    console.log(`${func} cleaning up remote workspace success, returns: ${resultCleaning}`)
+                    debug(utils.ssh(paxSSHHost,paxSSHPort,paxSSHUsername,paxSSHPassword,cmdCleaning))
+                    console.log(`${func} cleaning up remote workspace success`)
                 } catch (ex2) {
                     // ignore errors for cleaning up
                     console.warn(`${func} cleaning up remote workspace failed: ${ex2}`)
@@ -9849,6 +9968,11 @@ const fs = __nccwpck_require__(5747)
 const semver = __nccwpck_require__(6285)
 
 class utils {
+
+    static dateTimeNow() {
+        return (new Date()).toISOString().split('.')[0].replace(/[^0-9]/g, "")
+    }
+
     static sh(cmd) {
         return execSync(cmd).toString().trim()
     }
@@ -9862,6 +9986,36 @@ class utils {
             console.warn(`${path} does not exist`)
             return false
         }
+    }
+
+    static parseFileExtension(file) {
+        var result = new Map()
+        var KNOWN_DOUBLE_EXTS = ['.tar.gz', '.pax.Z']
+
+        var baseName = file.lastIndexOf('/') != -1 ? file.substring(file.lastIndexOf('/')+1) : file
+
+        var idx = -1
+
+        // some file names end with .tar.gz we want to keep
+        KNOWN_DOUBLE_EXTS.forEach( ext => {
+            if (baseName.endsWith(ext)) {
+                idx = baseName.length - ext.length
+            }
+        })
+
+        if (idx == -1) {
+            idx = baseName.lastIndexOf('.')
+        }
+
+        if (idx != -1) {
+            result.set('name', baseName.substring(0,idx))
+            result.set('ext', baseName.substring(idx))
+        } else {
+            result.set('name', baseName)
+            result.set('ext', '')
+        }
+
+        return result
     }
 
     static parseSemanticVersion(version) {
