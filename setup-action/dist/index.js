@@ -5028,10 +5028,10 @@ class utils {
     static fileExists(path) {
         try {
             fs.accessSync(path, fs.constants.F_OK)
-            console.log(`${path} does exist`)
+            console.log(`${path} exists :D `)
             return true
         } catch {
-            console.warn(`${path} does not exist`)
+            console.warn(`${path} does not exist :(`)
             return false
         }
     }
@@ -5075,6 +5075,12 @@ class utils {
         if (prerelease)
             versionMap.set('prerelease', ''+prerelease[0]+prerelease[1])
         return versionMap
+    }
+
+    static printMap (map) {
+        for (const [key, value] of map.entries()) {
+            console.log(`${key}: ${value ? value : 'null'}`);
+        }
     }
 
     static nvmShellInit(nodeJsVersion) {
@@ -9980,10 +9986,10 @@ class utils {
     static fileExists(path) {
         try {
             fs.accessSync(path, fs.constants.F_OK)
-            console.log(`${path} does exist`)
+            console.log(`${path} exists :D `)
             return true
         } catch {
-            console.warn(`${path} does not exist`)
+            console.warn(`${path} does not exist :(`)
             return false
         }
     }
@@ -10027,6 +10033,12 @@ class utils {
         if (prerelease)
             versionMap.set('prerelease', ''+prerelease[0]+prerelease[1])
         return versionMap
+    }
+
+    static printMap (map) {
+        for (const [key, value] of map.entries()) {
+            console.log(`${key}: ${value ? value : 'null'}`);
+        }
     }
 
     static nvmShellInit(nodeJsVersion) {
