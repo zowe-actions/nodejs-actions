@@ -5140,11 +5140,6 @@ exit 0
 EOF`
         return this.sh(fullCMD)
     }
-
-    static add2GlobalEnvVars(variableName,value){
-        var cmd = `echo "${variableName}=${value}" >> $GITHUB_ENV`
-        this.sh(cmd)
-    }
 }
 
 module.exports = utils;
@@ -10103,11 +10098,6 @@ exit 0
 EOF`
         return this.sh(fullCMD)
     }
-
-    static add2GlobalEnvVars(variableName,value){
-        var cmd = `echo "${variableName}=${value}" >> $GITHUB_ENV`
-        this.sh(cmd)
-    }
 }
 
 module.exports = utils;
@@ -10320,7 +10310,7 @@ var json = {}
 packageInfo.forEach((value,key) => {    
     json[key]=value
 })
-utils.add2GlobalEnvVars('PACKAGE_INFO_JSON',JSON.stringify(json, null, 2))
+core.exportVariable('PACKAGE_INFO_JSON',JSON.stringify(json, null, 2))
 
 // init nvmShell
 console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)
