@@ -109,7 +109,7 @@ var json = {}
 packageInfo.forEach((value,key) => {    
     json[key]=value
 })
-core.setOutput('package-info-json-text',JSON.stringify(json))
+utils.add2GlobalEnvVars('PACKAGE_INFO_JSON',JSON.stringify(json, null, 2))
 
 // init nvmShell
 console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)

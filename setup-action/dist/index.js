@@ -5122,7 +5122,7 @@ class utils {
         var fullCMD = `SSHPASS=${passwd} sshpass -e sftp -o BatchMode=no -o StrictHostKeyChecking=no -P ${port} -b - ${username}@${host} <<EOF
 ${cmds}
 EOF`
-        return utils.sh(fullCMD)
+        return this.sh(fullCMD)
     }
 
     static ssh(host, port, username, passwd, cmds) {
@@ -5130,7 +5130,7 @@ EOF`
 ${cmds}
 exit 0
 EOF`
-        return utils.sh(fullCMD)
+        return this.sh(fullCMD)
     }
 
     static sshKeyFile(host, port, username, keyPassPhrase, keyfile, cmds) {
@@ -5138,7 +5138,12 @@ EOF`
 ${cmds}
 exit 0
 EOF`
-        return utils.sh(fullCMD)
+        return this.sh(fullCMD)
+    }
+
+    static add2GlobalEnvVars(variableName,value){
+        var cmd = `echo "${variableName}=${value}" >> $GITHUB_ENV`
+        this.sh(cmd)
     }
 }
 
@@ -10080,7 +10085,7 @@ class utils {
         var fullCMD = `SSHPASS=${passwd} sshpass -e sftp -o BatchMode=no -o StrictHostKeyChecking=no -P ${port} -b - ${username}@${host} <<EOF
 ${cmds}
 EOF`
-        return utils.sh(fullCMD)
+        return this.sh(fullCMD)
     }
 
     static ssh(host, port, username, passwd, cmds) {
@@ -10088,7 +10093,7 @@ EOF`
 ${cmds}
 exit 0
 EOF`
-        return utils.sh(fullCMD)
+        return this.sh(fullCMD)
     }
 
     static sshKeyFile(host, port, username, keyPassPhrase, keyfile, cmds) {
@@ -10096,7 +10101,12 @@ EOF`
 ${cmds}
 exit 0
 EOF`
-        return utils.sh(fullCMD)
+        return this.sh(fullCMD)
+    }
+
+    static add2GlobalEnvVars(variableName,value){
+        var cmd = `echo "${variableName}=${value}" >> $GITHUB_ENV`
+        this.sh(cmd)
     }
 }
 
@@ -10310,7 +10320,7 @@ var json = {}
 packageInfo.forEach((value,key) => {    
     json[key]=value
 })
-core.setOutput('package-info-json-text',JSON.stringify(json))
+utils.add2GlobalEnvVars('PACKAGE_INFO_JSON',JSON.stringify(json, null, 2))
 
 // init nvmShell
 console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)

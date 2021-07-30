@@ -44,9 +44,6 @@ inputs:
   exit-if-folder-not-clean:
     description: 'exit workflow if git folder not clean'
     required: false
-outputs:
-  package-info-json-text:
-    description: 'Parsed manifest information to a json string'
 
 runs:
   using: 'node12'
