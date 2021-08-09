@@ -1,0 +1,10 @@
+name: "bump-version"
+description: "version bump for NodeJS project"
+inputs:
+  base-directory:
+    description: 'the base directory to run version bump'
+    required: false
+    
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
