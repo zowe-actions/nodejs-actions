@@ -39,7 +39,7 @@ if (res.includes('Git working directory not clean.')) {
     throw new Error(`Bump version failed: ${res}`)
 }
 
-utils.sh(`cd ${tempFolder} && git rebase HEAD~1 --signoff && git add . && git commit -s`)
+utils.sh(`cd ${tempFolder} && git rebase HEAD~1 --signoff && git add ${tempFolder}/ && git commit -s`)
 
 // push version changes
 console.log(`Pushing ${branch} to remote ...`)
