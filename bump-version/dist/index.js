@@ -11066,7 +11066,7 @@ if (version == '') {
 
 // get temp folder for cloning
 var tempFolder = `${process.env.RUNNER_TEMP}/.tmp-npm-registry-${utils.dateTimeNow()}`
-var tempFolderFull = tempFolder + '/' + actionsGithub.event.repository.name
+var tempFolderFull = tempFolder + '/' + actionsGithub.context.repo.repo
 
 console.log(`Cloning ${branch} into ${tempFolderFull} ...`)
 // clone to temp folder
