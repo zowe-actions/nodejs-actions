@@ -33,14 +33,18 @@ if (baseDirectory != '' && baseDirectory != '.') {
 } else {
     res = utils.sh(`cd ${tempFolderFull} && npm version ${version.toLowerCase()}`)
 }
-
+console.log(res)
 if (res.includes('Git working directory not clean.')) {
     throw new Error('Working directory is not clean')
 } else if (!res.match(/^v[0-9]+\.[0-9]+\.[0-9]+$/)) {
     throw new Error(`Bump version failed: ${res}`)
 }
 
-utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff && git add . && git commit -s`)
+console.log(utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff`))
+console.log('#########################################################')
+console.log(utils.sh(`cd ${tempFolderFull} && git add .`))
+console.log('#########################################################')
+console.log(utils.sh(`cd ${tempFolderFull} && git commit -s`))
 
 // push version changes
 console.log(`Pushing ${branch} to remote ...`)
