@@ -11,7 +11,7 @@ var version = core.getInput('version')
 if (version == '') {
     version = 'PATCH'
 }
-
+console.log(utils.sh('pwd')) //debug
 // get temp folder for cloning
 var tempFolder = `.tmp-npm-registry-${utils.dateTimeNow()}`
 
