@@ -1,4 +1,4 @@
-name: "nodejs-setup"
+name: "Setup"
 description: "Setup action for NodeJS project"
 inputs:
   package-name: 

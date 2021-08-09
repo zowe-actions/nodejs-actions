@@ -12,7 +12,7 @@ const core = require('@actions/core')
 const Registry = require('npm-registry')
 const { InvalidArgumentException , utils } = require('zowe-common')
 const Debug = require('debug')
-const debug = Debug('zowe-actions:nodejs-actions:setup-action')
+const debug = Debug('zowe-actions:nodejs-actions:setup')
 
 var publishRegistry
 var installRegistry
