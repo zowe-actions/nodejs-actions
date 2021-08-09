@@ -10366,7 +10366,7 @@ if (version == '') {
 }
 console.log(utils.sh('pwd')) //debug
 // get temp folder for cloning
-var tempFolder = `.tmp-npm-registry-${utils.dateTimeNow()}`
+var tempFolder = `${process.env.RUNNER_TEMP}/.tmp-npm-registry-${utils.dateTimeNow()}`
 
 console.log(`Cloning ${branch} into ${tempFolder} ...`)
 // clone to temp folder
@@ -10392,7 +10392,7 @@ if (res.includes('Git working directory not clean.')) {
     throw new Error(`Bump version failed: ${res}`)
 }
 
-utils.sh(`cd ${tempFolder} && git rebase HEAD~1 --signoff && git add explorer-jes/ && git commit -s`)
+utils.sh(`cd ${tempFolder} && git rebase HEAD~1 --signoff && git add . && git commit -s`)
 
 // push version changes
 console.log(`Pushing ${branch} to remote ...`)
