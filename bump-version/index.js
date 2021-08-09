@@ -1,6 +1,6 @@
 const core = require('@actions/core')
-const Registry = require('npm-registry')
-const { InvalidArgumentException , github, utils } = require('zowe-common')
+const actionsGithub = require('@actions/github')
+const { github, utils } = require('zowe-common')
 const Debug = require('debug')
 const debug = Debug('zowe-actions:nodejs-actions:bump-version')
 
@@ -11,11 +11,12 @@ var version = core.getInput('version')
 if (version == '') {
     version = 'PATCH'
 }
-console.log(utils.sh('pwd')) //debug
+
 // get temp folder for cloning
 var tempFolder = `${process.env.RUNNER_TEMP}/.tmp-npm-registry-${utils.dateTimeNow()}`
+var tempFolderFull = tempFolder + '/' + actionsGithub.event.repository.name
 
-console.log(`Cloning ${branch} into ${tempFolder} ...`)
+console.log(`Cloning ${branch} into ${tempFolderFull} ...`)
 // clone to temp folder
 github.clone(repo,tempFolder,branch)
 
@@ -26,11 +27,11 @@ var res
 if (baseDirectory != '' && baseDirectory != '.') {
     // REF: https://github.com/npm/npm/issues/9111#issuecomment-126500995
     //      npm version not creating commit or tag in subdirectory [using given workaround]
-    utils.sh(`cd ${tempFolder}/${baseDirectory} && mkdir -p .git`)
-    res = utils.sh(`cd ${tempFolder}/${baseDirectory} && npm version ${version.toLowerCase()}`)
+    utils.sh(`cd ${tempFolderFull}/${baseDirectory} && mkdir -p .git`)
+    res = utils.sh(`cd ${tempFolderFull}/${baseDirectory} && npm version ${version.toLowerCase()}`)
     
 } else {
-    res = utils.sh(`cd ${tempFolder} && npm version ${version.toLowerCase()}`)
+    res = utils.sh(`cd ${tempFolderFull} && npm version ${version.toLowerCase()}`)
 }
 
 if (res.includes('Git working directory not clean.')) {
@@ -39,7 +40,7 @@ if (res.includes('Git working directory not clean.')) {
     throw new Error(`Bump version failed: ${res}`)
 }
 
-utils.sh(`cd ${tempFolder} && git rebase HEAD~1 --signoff && git add . && git commit -s`)
+utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff && git add . && git commit -s`)
 
 // push version changes
 console.log(`Pushing ${branch} to remote ...`)
