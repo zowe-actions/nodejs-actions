@@ -4618,6 +4618,69 @@ class github {
 
         console.log(utils.sh(`git tag "${tag}" && git push origin "${tag}"`))
     }
+
+    /**
+     * Clone a remote repository
+     *
+     * @param  repo            the repository name, required 
+     * @param  dir             the directory name to do the clone, required
+     * @param  branch          the branch name to be cloned, required
+     */
+    static clone(repo, dir, branch) {
+        if (!repo || !dir || !branch) {
+            console.warn('Clone operation skipped, must specify all three arguments: repo, dir and branch')
+        } 
+        else {
+            var cmd = `mkdir ${dir} && cd ${dir} && git clone`
+            if (branch) {
+                cmd += ` --single-branch --branch ${branch} `
+            }
+            var fullRepo = `https://github.com/${repo}.git/`
+            cmd += fullRepo
+            console.log(utils.sh(cmd))
+        }
+    }
+
+    /**
+     * Push committed changes to a remote repository
+     *
+     * @param  branch          the branch to be pushed to, required
+     * @param  dir             the working directory, required
+     */
+    static push(branch, dir, username, passwd, repo) {
+        if (!branch) {
+            console.warn('Push operation skipped, must specify argument: branch')
+        } 
+        else {
+            var cmd = `cd ${dir} && git push https://${username}:${passwd}@github.com/${repo} ${branch}`
+            console.log(utils.sh(cmd))
+        }
+    }
+
+    /**
+     * Check if current branch is synced with remote
+     * 
+     * @param  branch          the branch to be checked against, required
+     * @param  dir             the working directory, required
+     */
+    static isSync(branch, dir) {
+        // update remote
+        utils.sh(`cd ${dir} && git fetch origin`)
+        // get last hash
+        var localHash = utils.sh(`cd ${dir} && git rev-parse ${branch}`)
+        var remoteHash = utils.sh(`cd ${dir} && git rev-parse origin/${branch}`)
+
+        if (localHash == remoteHash) {
+            console.log('Working directory is synced with remote.')
+            return true
+        } else {
+            console.warn(`Working directory is not synced with remote:
+                local : ${localHash}
+                remote: ${remoteHash}`)
+            return false
+        }
+    }
+
 }
 
 module.exports = github;
@@ -9592,6 +9655,69 @@ class github {
 
         console.log(utils.sh(`git tag "${tag}" && git push origin "${tag}"`))
     }
+
+    /**
+     * Clone a remote repository
+     *
+     * @param  repo            the repository name, required 
+     * @param  dir             the directory name to do the clone, required
+     * @param  branch          the branch name to be cloned, required
+     */
+    static clone(repo, dir, branch) {
+        if (!repo || !dir || !branch) {
+            console.warn('Clone operation skipped, must specify all three arguments: repo, dir and branch')
+        } 
+        else {
+            var cmd = `mkdir ${dir} && cd ${dir} && git clone`
+            if (branch) {
+                cmd += ` --single-branch --branch ${branch} `
+            }
+            var fullRepo = `https://github.com/${repo}.git/`
+            cmd += fullRepo
+            console.log(utils.sh(cmd))
+        }
+    }
+
+    /**
+     * Push committed changes to a remote repository
+     *
+     * @param  branch          the branch to be pushed to, required
+     * @param  dir             the working directory, required
+     */
+    static push(branch, dir, username, passwd, repo) {
+        if (!branch) {
+            console.warn('Push operation skipped, must specify argument: branch')
+        } 
+        else {
+            var cmd = `cd ${dir} && git push https://${username}:${passwd}@github.com/${repo} ${branch}`
+            console.log(utils.sh(cmd))
+        }
+    }
+
+    /**
+     * Check if current branch is synced with remote
+     * 
+     * @param  branch          the branch to be checked against, required
+     * @param  dir             the working directory, required
+     */
+    static isSync(branch, dir) {
+        // update remote
+        utils.sh(`cd ${dir} && git fetch origin`)
+        // get last hash
+        var localHash = utils.sh(`cd ${dir} && git rev-parse ${branch}`)
+        var remoteHash = utils.sh(`cd ${dir} && git rev-parse origin/${branch}`)
+
+        if (localHash == remoteHash) {
+            console.log('Working directory is synced with remote.')
+            return true
+        } else {
+            console.warn(`Working directory is not synced with remote:
+                local : ${localHash}
+                remote: ${remoteHash}`)
+            return false
+        }
+    }
+
 }
 
 module.exports = github;
@@ -10245,7 +10371,7 @@ const core = __nccwpck_require__(4562)
 const Registry = __nccwpck_require__(8463)
 const { InvalidArgumentException , utils } = __nccwpck_require__(386)
 const Debug = __nccwpck_require__(8797)
-const debug = Debug('zowe-actions:nodejs-actions:setup-action')
+const debug = Debug('zowe-actions:nodejs-actions:setup')
 
 var publishRegistry
 var installRegistry
