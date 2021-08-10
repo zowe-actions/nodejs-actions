@@ -18,7 +18,7 @@ var tempFolderFull = tempFolder + '/' + actionsGithub.context.repo.repo
 
 console.log(`Cloning ${branch} into ${tempFolderFull} ...`)
 // clone to temp folder
-github.clone(repo,tempFolder,branch,process.env.GITHUB_USER)
+github.clone(repo,tempFolder,branch)
 
 // run npm version
 console.log(`Making a "${version}" version bump ...`)
@@ -44,7 +44,7 @@ console.log(utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff`))
 
 // push version changes
 console.log(`Pushing ${branch} to remote ...`)
-github.push(branch, tempFolderFull)
+github.push(branch, tempFolderFull, process.env.GITHUB_USER, process.env.GITHUB_PASSWD, repo)
 if (!github.isSync(branch, tempFolderFull)) {
     throw new Error('Branch is not synced with remote after npm version.')
 }
