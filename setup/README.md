@@ -38,7 +38,8 @@ None
 <br /><br />
 
 ## Exported environment variables (global, for subsequent workflow steps to consume)
-#### `PACKAGE_INFO` Selected infomation in package.json in JSON string format.
+#### `PACKAGE_INFO` 
+Selected infomation in package.json in JSON string format.
 <br /><br />
 
 ## Example usage
