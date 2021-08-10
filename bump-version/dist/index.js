@@ -11092,7 +11092,7 @@ if (res.includes('Git working directory not clean.')) {
     throw new Error(`Bump version failed: ${res}`)
 }
 
-console.log(utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff`))
+console.log(utils.sh(`cd ${tempFolderFull} && git reset HEAD~1 --signoff`))
 console.log('#########################################################')
 console.log(utils.sh(`cd ${tempFolderFull} && git add .`))
 console.log('#########################################################')
