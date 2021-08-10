@@ -2073,7 +2073,7 @@ exports.withCustomRequest = withCustomRequest;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
-const VERSION = "2.15.0";
+const VERSION = "2.15.1";
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -10278,8 +10278,9 @@ class github {
      * @param  repo            the repository name, required 
      * @param  dir             the directory name to do the clone, required
      * @param  branch          the branch name to be cloned, required
+     * @param  username        the username to be used for pushing changes
      */
-    static clone(repo, dir, branch) {
+    static clone(repo, dir, branch, username) {
         if (!repo || !dir || !branch) {
             console.warn('Clone operation skipped, must specify all three arguments: repo, dir and branch')
         } 
@@ -10288,7 +10289,8 @@ class github {
             if (branch) {
                 cmd += ` --single-branch --branch ${branch} `
             }
-            var fullRepo = `https://github.com/${repo}.git/`
+            var fullRepo = `git@github.com:${username}/${repo}.git`
+            
             cmd += fullRepo
             console.log(utils.sh(cmd))
         }
@@ -11073,7 +11075,7 @@ var tempFolderFull = tempFolder + '/' + actionsGithub.context.repo.repo
 
 console.log(`Cloning ${branch} into ${tempFolderFull} ...`)
 // clone to temp folder
-github.clone(repo,tempFolder,branch)
+github.clone(repo,tempFolder,branch,process.env.GITHUB_USER)
 
 // run npm version
 console.log(`Making a "${version}" version bump ...`)

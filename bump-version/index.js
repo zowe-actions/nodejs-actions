@@ -18,7 +18,7 @@ var tempFolderFull = tempFolder + '/' + actionsGithub.context.repo.repo
 
 console.log(`Cloning ${branch} into ${tempFolderFull} ...`)
 // clone to temp folder
-github.clone(repo,tempFolder,branch)
+github.clone(repo,tempFolder,branch,process.env.GITHUB_USER)
 
 // run npm version
 console.log(`Making a "${version}" version bump ...`)
