@@ -2,6 +2,8 @@
 
 This action does setup before building Nodejs project. Specifically configuring install registries and publish registries and logging in.
 
+---
+
 ## Inputs
 
 #### `package-name`
@@ -31,9 +33,12 @@ This action does setup before building Nodejs project. Specifically configuring 
 #### `exit-if-folder-not-clean`
 **Optional** exit workflow if at the end git folder not clean
 
+---
+
 ## Exported environment variables (global, for subsequent workflow steps to consume)
 #### `PACKAGE_INFO` Selected infomation in package.json in JSON string format.
 
+---
 
 ## Example usage
 ```
@@ -41,15 +46,15 @@ uses: zowe-actions/nodejs-actions/setup@main
 with:
     package-name: 'org.zowe.explorer-jes'
     nodejs-version: 'v10.18.1'
-    install-registry-url: xxx
-    install-registry-email: xxx
-    install-registry-username: xxx
-    install-registry-password: xxx
-    publish-registry-email: xxx
-    publish-registry-username: xxx
-    publish-registry-password: xxx
+    install-registry-url: 
+    install-registry-email: 
+    install-registry-username: 
+    install-registry-password: 
+    publish-registry-email: 
+    publish-registry-username: 
+    publish-registry-password: 
 ```
-To enable debug mode, add
+To enable debug mode, append
 ```
 env:
     DEBUG: 'zowe-actions:nodejs-actions:setup'
