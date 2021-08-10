@@ -10297,28 +10297,31 @@ class github {
     /**
      * Push committed changes to a remote repository
      *
-     * @param  repo            the repository name, required 
-     * @param  branch          the branch name to be cloned, required
+     * @param  branch          the branch to be pushed to, required
+     * @param  dir             the working directory, required
      */
-    static push(branch) {
+    static push(branch, dir) {
         if (!branch) {
             console.warn('Push operation skipped, must specify argument: branch')
         } 
         else {
-            var cmd = `git push -u origin ${branch}`
+            var cmd = `cd ${dir} && git push -u origin ${branch}`
             console.log(utils.sh(cmd))
         }
     }
 
     /**
      * Check if current branch is synced with remote
+     * 
+     * @param  branch          the branch to be checked against, required
+     * @param  dir             the working directory, required
      */
-    static isSync(branch) {
+    static isSync(branch, dir) {
         // update remote
-        utils.sh('git fetch origin')
+        utils.sh(`cd ${dir} && git fetch origin`)
         // get last hash
-        var localHash = utils.sh(`git rev-parse ${branch}`)
-        var remoteHash = utils.sh(`git rev-parse origin/${branch}`)
+        var localHash = utils.sh(`cd ${dir} && git rev-parse ${branch}`)
+        var remoteHash = utils.sh(`cd ${dir} && git rev-parse origin/${branch}`)
 
         if (localHash == remoteHash) {
             console.log('Working directory is synced with remote.')
@@ -11096,8 +11099,8 @@ console.log(utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff`))
 
 // push version changes
 console.log(`Pushing ${branch} to remote ...`)
-github.push(branch)
-if (!github.isSync(branch)) {
+github.push(branch, tempFolderFull)
+if (!github.isSync(branch, tempFolderFull)) {
     throw new Error('Branch is not synced with remote after npm version.')
 }
 

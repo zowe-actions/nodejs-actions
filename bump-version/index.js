@@ -44,8 +44,8 @@ console.log(utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff`))
 
 // push version changes
 console.log(`Pushing ${branch} to remote ...`)
-github.push(branch)
-if (!github.isSync(branch)) {
+github.push(branch, tempFolderFull)
+if (!github.isSync(branch, tempFolderFull)) {
     throw new Error('Branch is not synced with remote after npm version.')
 }
 
