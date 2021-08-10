@@ -33,6 +33,10 @@ This action does setup before building Nodejs project. Specifically configuring 
 **Optional** exit workflow if at the end git folder not clean
 <br /><br />
 
+## Outputs
+None
+<br /><br />
+
 ## Exported environment variables (global, for subsequent workflow steps to consume)
 #### `PACKAGE_INFO` Selected infomation in package.json in JSON string format.
 <br /><br />
