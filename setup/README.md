@@ -1,8 +1,7 @@
 # setup action for NodeJS project
 
 This action does setup before building Nodejs project. Specifically configuring install registries and publish registries and logging in.
-
----
+<br /><br />
 
 ## Inputs
 
@@ -32,13 +31,11 @@ This action does setup before building Nodejs project. Specifically configuring 
 **Optional** Always to use `npm install`. Default `false`
 #### `exit-if-folder-not-clean`
 **Optional** exit workflow if at the end git folder not clean
-
----
+<br /><br />
 
 ## Exported environment variables (global, for subsequent workflow steps to consume)
 #### `PACKAGE_INFO` Selected infomation in package.json in JSON string format.
-
----
+<br /><br />
 
 ## Example usage
 ```
