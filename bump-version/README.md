@@ -36,5 +36,5 @@ with:
 To enable debug mode, append
 ```
 env:
-    DEBUG: 'zowe-actions:nodejs-actions:bump-version'
+  DEBUG: 'zowe-actions:nodejs-actions:bump-version'
 ```
