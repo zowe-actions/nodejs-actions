@@ -6,15 +6,15 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 ## Inputs
 
 #### `package-name`
-**[Required]** The name of the package.
+**[Required]** The name of the package
 #### `nodejs-version`
-**[Required]** The version of nodejs to be used for building.
+**[Required]** The version of nodejs to be used for building
 #### `install-registry-url`
-**[Required]** Install registry URL.
+**[Required]** Install registry URL
 #### `install-registry-email`
-**[Required]** Install registry email.
+**[Required]** Install registry email
 #### `install-registry-username`
-**[Required]** Install registry username.
+**[Required]** Install registry username
 #### `install-registry-password`
 **[Required]** Install registry password
 #### `install-registry-token-credential`
@@ -40,7 +40,7 @@ None
 ## Exported environment variables 
 (global env vars - for subsequent workflow steps to consume)
 #### `PACKAGE_INFO` 
-Selected infomation in package.json in JSON string format. <br />
+Selected infomation in package.json in JSON string format <br />
 Example:
 ```
 PACKAGE_INFO: {
@@ -64,18 +64,18 @@ PACKAGE_INFO: {
 ```
 uses: zowe-actions/nodejs-actions/setup@main
 with:
-    package-name: 'org.zowe.mycomponent'
-    nodejs-version: 'v1.0.23'
-    install-registry-url: 
-    install-registry-email: 
-    install-registry-username: 
-    install-registry-password: 
-    publish-registry-email: 
-    publish-registry-username: 
-    publish-registry-password: 
+  package-name: 'org.zowe.mycomponent'
+  nodejs-version: 'v1.0.23'   
+  install-registry-url: 
+  install-registry-email: 
+  install-registry-username: 
+  install-registry-password: 
+  publish-registry-email: 
+  publish-registry-username: 
+  publish-registry-password: 
 ```
 To enable debug mode, append
 ```
 env:
-    DEBUG: 'zowe-actions:nodejs-actions:setup'
+  DEBUG: 'zowe-actions:nodejs-actions:setup'
 ```
