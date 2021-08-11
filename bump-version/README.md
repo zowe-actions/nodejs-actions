@@ -30,8 +30,8 @@ None
 ```
 uses: zowe-actions/nodejs-actions/bump-version@main
 with:
-  github-user:
-  github-passwd:
+  github-user: user
+  github-passwd: mypassword
 ```
 To enable debug mode, append
 ```
