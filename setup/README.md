@@ -1,7 +1,7 @@
 # Setup action for Zowe NodeJS projects
 
 This action does setup before building Zowe Nodejs projects. Specifically configuring install registries and publish registries and logging in.
-<br /><br />
+<br />
 
 ## Inputs
 
@@ -35,7 +35,7 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 
 ## Outputs
 None
-<br /><br />
+<br />
 
 ## Exported environment variables 
 (global env vars - for subsequent workflow steps to consume)
@@ -57,7 +57,7 @@ PACKAGE_INFO: {
     ]
 }
 ```
-<br /><br />
+<br />
 
 ## Example usage
 (this is a minimal set of inputs you need to provide)
