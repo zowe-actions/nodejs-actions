@@ -1,6 +1,12 @@
 name: "bump-version"
 description: "version bump for NodeJS project"
 inputs:
+  github-user:
+    description: 'github userid'
+    required: true
+  github-passwd:
+    description: 'github password'
+    required: true
   base-directory:
     description: 'the base directory to run version bump'
     required: false
