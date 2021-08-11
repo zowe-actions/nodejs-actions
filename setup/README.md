@@ -6,31 +6,31 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 ## Inputs
 
 #### `package-name`
-**[Required]** The name of the package
+**Required** - The name of the package
 #### `nodejs-version`
-**[Required]** The version of nodejs to be used for building
+**Required** - The version of nodejs to be used for building
 #### `install-registry-url`
-**[Required]** Install registry URL
+**Required** - Install registry URL
 #### `install-registry-email`
-**[Required]** Install registry email
+**Required** - Install registry email
 #### `install-registry-username`
-**[Required]** Install registry username
+**Required** - Install registry username
 #### `install-registry-password`
-**[Required]** Install registry password
+**Required** - Install registry password
 #### `install-registry-token-credential`
-**[Optional]** Install registry token credential (will prioritize token authentication if provided)
+**Optional** - Install registry token credential (will prioritize token authentication if provided)
 #### `publish-registry-email`
-**[Required]** Publish registry email
+**Required** - Publish registry email
 #### `publish-registry-username`
-**[Required]** Publish registry username
+**Required** - Publish registry username
 #### `publish-registry-password`
-**[Required]** Publish registry password
+**Required** - Publish registry password
 #### `publish-registry-token-credential`
-**[Optional]** Publish registry token credential (will prioritize token authentication if provided)
+**Optional** - Publish registry token credential (will prioritize token authentication if provided)
 #### `always-use-npm-install`
-**[Optional]** Always to use `npm install`. Default `false`
+**Optional** - Always to use `npm install`. Default `false`
 #### `exit-if-folder-not-clean`
-**[Optional]** exit workflow if at the end git folder not clean
+**Optional** - exit workflow if at the end git folder not clean
 <br /><br />
 
 ## Outputs
