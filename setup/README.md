@@ -66,13 +66,13 @@ uses: zowe-actions/nodejs-actions/setup@main
 with:
   package-name: 'org.zowe.mycomponent'
   nodejs-version: 'v1.0.23'   
-  install-registry-url: 
-  install-registry-email: 
-  install-registry-username: 
-  install-registry-password: 
-  publish-registry-email: 
-  publish-registry-username: 
-  publish-registry-password: 
+  install-registry-url: https://myown-registry.com
+  install-registry-email: install-user@example.org
+  install-registry-username: i-user
+  install-registry-password: i-passwd
+  publish-registry-email: publish-user@example.org
+  publish-registry-username: p-user
+  publish-registry-password: p-passwd
 ```
 To enable debug mode, append
 ```
