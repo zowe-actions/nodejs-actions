@@ -29,9 +29,9 @@ None
 (this is a minimal set of inputs you need to provide)
 ```
 uses: zowe-actions/nodejs-actions/bump-version@main
-  with:
-    github-user:
-    github-passwd:
+with:
+  github-user:
+  github-passwd:
 ```
 To enable debug mode, append
 ```
