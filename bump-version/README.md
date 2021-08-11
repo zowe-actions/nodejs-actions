@@ -7,13 +7,13 @@ This action must be run AFTER [zowe-actions/shared-actions/release](https://gith
 
 ## Inputs
 #### `github-user`
-**[Required]** The github user to be used to do `git push`.
+**[Required]** The github user to be used to do `git push`
 #### `github-passwd`
-**[Required]** The password associated with the github user provided above.
+**[Required]** The password associated with the github user provided above
 #### `base-directory`
-**[Optional]** The directory of where `npm version` command will be run. Only needed if command is NOT run in the root directory of the project.
+**[Optional]** The directory of where `npm version` command will be run. Only needed if command is NOT run in the root directory of the project
 #### `version`
-**[Optional]** The argument for command `npm version`. Default `patch`.
+**[Optional]** The argument for command `npm version`. Default `patch`
 <br /><br />
 
 ## Outputs
