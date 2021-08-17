@@ -101,7 +101,16 @@ console.log(`Package information: ${packageName} v${packageInfo.get('version')}`
 // first need to convert from Map to json object
 var json = {}
 packageInfo.forEach((value,key) => {    
-    json[key]=value
+    if (value instanceof Map) {
+        var json2 = {}
+        value.forEach((value2,key2) => {
+          json2[key2]=value2
+        })
+        json[key]=json2
+    }
+    else {
+        json[key]=value
+    }
 })
 core.exportVariable('PACKAGE_INFO',JSON.stringify(json, null, 2))
 
