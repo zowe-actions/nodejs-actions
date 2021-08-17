@@ -7,8 +7,6 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 
 #### `package-name`
 **Required** - The name of the package
-#### `nodejs-version`
-**Required** - The version of nodejs to be used for building
 #### `install-registry-url`
 **Required** - Install registry URL
 #### `install-registry-email`

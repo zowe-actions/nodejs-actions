@@ -4,10 +4,6 @@ inputs:
   package-name: 
     description: 'package name'
     required: true
-  nodejs-version: 
-    description: 'nodejs version'
-    required: true
-
   install-registry-url:
     description: 'install registry url'
     required: true

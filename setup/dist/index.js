@@ -10376,18 +10376,12 @@ const debug = Debug('zowe-actions:nodejs-actions:setup')
 var publishRegistry
 var installRegistry
 var packageName
-var nodeJsVersion
 var projectRootPath = process.env.GITHUB_WORKSPACE
 
 // Get packageName
 packageName = core.getInput('package-name')     
 if (!packageName) 
     throw new InvalidArgumentException('packageName')
-
-// Get nodejs version
-nodeJsVersion = core.getInput('nodejs-version')
-if (!nodeJsVersion)
-    throw new InvalidArgumentException('nodeJsVersion')
 
 // Making publishRegistry
 var prEmail = core.getInput('publish-registry-email')
@@ -10471,27 +10465,30 @@ packageInfo.forEach((value,key) => {
 core.exportVariable('PACKAGE_INFO',JSON.stringify(json, null, 2))
 
 // init nvmShell
-console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)
-console.log('\n>>>>>>>>>>>>>>> Initialize nvm shell')
-debug(utils.nvmShellInit(nodeJsVersion))
-console.log('<<<<<<<<<<<<<<< Done initialize nvm shell')
+// console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)
+// console.log('\n>>>>>>>>>>>>>>> Initialize nvm shell')
+// debug(utils.nvmShellInit(nodeJsVersion))
+// console.log('<<<<<<<<<<<<<<< Done initialize nvm shell')
+//debug
+console.log('node version')
+console.log(utils.sh('node --version'))
 
 // Install Node Package Dependencies
 console.log('\n>>>>>>>>>>>>>>> Install node package dependencies')
 if (utils.fileExists(`${projectRootPath}/yarn.lock`)) {
-    debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'yarn install']))
+    debug(utils.sh(`cd ${projectRootPath} && yarn install`))
 } 
 else {
     // we save audit part to next stage
     var alwaysUseNpmInstall = core.getInput('always-use-npm-install')
     if (alwaysUseNpmInstall == 'true') {
-        debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'npm install --no-audit']))
+        debug(utils.sh(`cd ${projectRootPath} && npm install --no-audit`))
     } else {
         if (utils.fileExists(`${projectRootPath}/package-lock.json`)) {
             // if we have package-lock.json, try to use everything defined in that file
-            debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'npm ci']))
+            debug(utils.sh(`cd ${projectRootPath} && npm ci`))
         } else {
-            debug(utils.nvmShell(nodeJsVersion, [`cd ${projectRootPath}`,'npm install --no-audit']))
+            debug(utils.sh(`cd ${projectRootPath} && npm install --no-audit`))
         }
     }
 }
