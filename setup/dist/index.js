@@ -10464,15 +10464,6 @@ packageInfo.forEach((value,key) => {
 })
 core.exportVariable('PACKAGE_INFO',JSON.stringify(json, null, 2))
 
-// init nvmShell
-// console.log(`Pipeline will use node.js ${nodeJsVersion} to build and test`)
-// console.log('\n>>>>>>>>>>>>>>> Initialize nvm shell')
-// debug(utils.nvmShellInit(nodeJsVersion))
-// console.log('<<<<<<<<<<<<<<< Done initialize nvm shell')
-//debug
-console.log('node version')
-console.log(utils.sh('node --version'))
-
 // Install Node Package Dependencies
 console.log('\n>>>>>>>>>>>>>>> Install node package dependencies')
 if (utils.fileExists(`${projectRootPath}/yarn.lock`)) {
