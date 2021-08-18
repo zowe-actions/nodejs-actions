@@ -113,6 +113,7 @@ packageInfo.forEach((value,key) => {
     }
 })
 core.exportVariable('PACKAGE_INFO',JSON.stringify(json, null, 2))
+core.exportVariable('P_VERSION',json['version'])
 
 // Install Node Package Dependencies
 console.log('\n>>>>>>>>>>>>>>> Install node package dependencies')

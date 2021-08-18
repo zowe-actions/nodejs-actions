@@ -4,7 +4,6 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 <br />
 
 ## Inputs
-
 #### `package-name`
 **Required** - The name of the package
 #### `install-registry-url`
@@ -55,6 +54,8 @@ PACKAGE_INFO: {
     ]
 }
 ```
+#### `P_VERSION`
+Project/package version number. Will overwrite `P_VERSION` produced at [P_VERSION](https://github.com/zowe-actions/shared-actions/tree/main/prepare-workflow#p_version)
 <br />
 
 ## Example usage
@@ -62,8 +63,7 @@ PACKAGE_INFO: {
 ```
 uses: zowe-actions/nodejs-actions/setup@main
 with:
-  package-name: 'org.zowe.mycomponent'
-  nodejs-version: 'v1.0.23'   
+  package-name: 'org.zowe.mycomponent' 
   install-registry-url: https://myown-registry.com
   install-registry-email: install-user@example.org
   install-registry-username: i-user
