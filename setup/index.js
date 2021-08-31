@@ -18,6 +18,10 @@ var publishRegistry
 var installRegistry
 var packageName
 var projectRootPath = process.env.GITHUB_WORKSPACE
+var workingDirectory = core.getInput('working-directory')
+if (workingDirectory != '') {
+    projectRootPath += '/'+ workingDirectory 
+}
 
 // Get packageName
 packageName = core.getInput('package-name')     
@@ -36,6 +40,9 @@ if (prEmail && ((prUsername && prPassword) || prTokenCredential)) {
     args.set('username', prUsername)
     args.set('password', prPassword)
     args.set('tokenCredential', prTokenCredential)
+    if (workingDirectory != '') {
+        args.set('workingDirectory', workingDirectory)
+    }
     publishRegistry = new Registry(args)
     // try to extract publish registry from package.json
     publishRegistry.initFromPackageJson(args)
@@ -70,6 +77,9 @@ if (irEmail && ((irUsername && irPassword) || irTokenCredential)) {
     args.set('password', irPassword)
     args.set('tokenCredential', irTokenCredential)
     args.set('registry', irUrl)
+    if (workingDirectory != '') {
+        args.set('workingDirectory', workingDirectory)
+    }
     installRegistry = new Registry(args)
     console.log(`- ${installRegistry.scope ? '@'+installRegistry.scope+':':''}`+ installRegistry.registry)
     console.log('<<<<<<<<<<<<<<< Done init install registry')

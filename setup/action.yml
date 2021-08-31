@@ -4,6 +4,9 @@ inputs:
   package-name: 
     description: 'package name'
     required: true
+  working-directory:
+    description: the directory of where to run setup action
+    required: false
   install-registry-url:
     description: 'install registry url'
     required: true

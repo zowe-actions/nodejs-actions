@@ -6,6 +6,8 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 ## Inputs
 #### `package-name`
 **Required** - The name of the package
+#### `working-directory`
+**Optional** - the directory of where to run action
 #### `install-registry-url`
 **Required** - Install registry URL
 #### `install-registry-email`
