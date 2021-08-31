@@ -25,6 +25,7 @@ class Registry {
     username;
     password;
     packageInfo;
+    workingDirectory;
 
     /**
      * Initialize npm registry properties.
@@ -37,6 +38,7 @@ class Registry {
      * @param   password                    password for NPM. Optional.
      * @param   email                       NPM user email
      * @param   packageJsonFile             {@code package.json} file name. Optional, default is {@link #PACKAGE_JSON}.
+     * @param   workingDirectory            the directory of where package.json resides.
     */
     constructor(args) {                      
         // File name of package.json, default is 'package.json'
@@ -72,6 +74,9 @@ class Registry {
         }
         if (args.get('password')) {
             this.password = args.get('password')
+        }
+        if (args.get('workingDirectory')) {
+            this.workingDirectory = args.get('workingDirectory')
         }
     }
 
@@ -231,8 +236,15 @@ class Registry {
         if (this.packageInfo) {
             return this.packageInfo
         }
+        
         var info = new Map()
-        var packageJsonFileFullPath = `${process.env.GITHUB_WORKSPACE}/${this.packageJsonFile}`
+        var packageJsonFileFullPath
+        if (this.workingDirectory) {
+            packageJsonFileFullPath = `${process.env.GITHUB_WORKSPACE}/${this.workingDirectory}/${this.packageJsonFile}`
+        }
+        else {
+            packageJsonFileFullPath = `${process.env.GITHUB_WORKSPACE}/${this.packageJsonFile}`
+        }
         if (this.packageJsonFile && utils.fileExists(packageJsonFileFullPath)) {
             var pkg = JSON.parse(fs.readFileSync(packageJsonFileFullPath));
             
