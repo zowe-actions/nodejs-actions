@@ -1,8 +1,0 @@
-name: "Publish"
-description: "Publish action for NodeJS project"
-
-runs:
-  using: 'node12'
-  main: 'dist/index.js'
-
-  #TODO
