@@ -9,16 +9,16 @@ inputs:
     required: false
   install-registry-url:
     description: 'install registry url'
-    required: true
+    required: false
   install-registry-email:
     description: 'install registry email'
-    required: true
+    required: false
   install-registry-username:
     description: 'install registry username'
-    required: true
+    required: false
   install-registry-password:
     description: 'install registry password'
-    required: true
+    required: false
   install-registry-token-credential:
     description: 'install registry token credential'
     required: false
