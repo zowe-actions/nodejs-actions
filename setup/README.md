@@ -1,7 +1,6 @@
 # Setup action for Zowe NodeJS projects
 
-This action does setup before building Zowe Nodejs projects. Specifically configuring install registries and publish registries and logging in.
-<br />
+This action does setup before building Zowe Nodejs projects. Specifically configuring install registries and publish registries and logging in. Then does an npm install to install all node dependencies.  
 
 ## Inputs
 
