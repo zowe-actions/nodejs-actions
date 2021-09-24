@@ -10547,6 +10547,9 @@ packageInfo.forEach((value,key) => {
     }
 })
 core.exportVariable('PACKAGE_INFO',JSON.stringify(json, null, 2))
+if (packageInfo == '' || !packageInfo) {
+    console.error('WARNING: packageInfo failed to be parsed, possibly due to package.json file is missing from current project.')
+}
 core.exportVariable('P_VERSION',json['version'])
 
 // Install Node Package Dependencies

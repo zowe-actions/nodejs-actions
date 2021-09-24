@@ -16,9 +16,13 @@ const DEFAULT_NPM_NON_RELEASE_TAG = 'snapshot'
 
 var isReleaseBranch = `${ process.env.IS_RELEASE_BRANCH == 'true' ? true : false }`
 var isPerformingRelease = `${ core.getInput('perform-release') == 'true' ? true : false }`
-var npmPublishRegistry = process.env.PACKAGE_INFO.registry
-if (npmPublishRegistry = '') {
-    throw new Error('there is no registry information within package.json, please fix it in package.json before doing a npm publish. publish registry information is mandatory')
+var packageInfo = process.env.PACKAGE_INFO ? JSON.parse(process.env.PACKAGE_INFO) : ''
+if (packageInfo == '') {
+    throw new Error('There is no environment variable PACKAGE_INFO, possibly meaning package.json is absent. Check any warning message in zowe-actions/nodejs-actions/setup')   
+}
+var npmPublishRegistry = packageInfo['registry']
+if (!npmPublishRegistry || npmPublishRegistry == '') {
+    throw new Error('There is no registry information within package.json, please fix it in package.json before doing a npm publish. publish registry information is mandatory')
 }
 var matchedBranch = utils.searchDefaultBranches()
 var npmTag = ''
