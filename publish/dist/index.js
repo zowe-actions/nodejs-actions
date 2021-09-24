@@ -5416,7 +5416,7 @@ if (revert) {
     debug(`Running $ npm version --no-git-tag-version ${process.env.PUBLISH_VERSION}`)
     debug(utils.sh(`npm version --no-git-tag-version ${process.env.PUBLISH_VERSION}`))
 }
-
+debug(`Running $ npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`)
 debug(utils.sh(`npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`))
 
 if (revert && currentCommit) {
