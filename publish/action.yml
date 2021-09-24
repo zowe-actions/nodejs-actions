@@ -1,0 +1,10 @@
+name: "Publish"
+description: "publish action for NodeJS project"
+inputs:
+  perform-release:
+    description: 'indicate if we are performing a release'
+    required: false
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
