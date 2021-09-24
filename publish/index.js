@@ -48,16 +48,19 @@ debug(`Do we need to revert changes? ${revert}`)
 var currentCommit
 if (revert) {
     currentCommit = utils.sh('git rev-parse HEAD')
+    debug(`current commit is ${currentCommit}`)
     // npm version without tag & commit
     // so this command just update package.json version to target version.
-    utils.sh(`npm version --no-git-tag-version ${process.env.PUBLISH_VERSION}`)
+    debug(`Running $ npm version --no-git-tag-version ${process.env.PUBLISH_VERSION}`)
+    debug(utils.sh(`npm version --no-git-tag-version ${process.env.PUBLISH_VERSION}`))
 }
 
-utils.sh(`npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`)
+debug(utils.sh(`npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`))
 
 if (revert && currentCommit) {
     console.log('Revert changes by npm version ...')
-    utils.sh(`git reset --hard ${currentCommit}`)
+    debug(`Running $ git reset --hard ${currentCommit}`)
+    debug(utils.sh(`git reset --hard ${currentCommit}`))
     console.log('Revert done.')
 }
 console.log('npm publish done')
