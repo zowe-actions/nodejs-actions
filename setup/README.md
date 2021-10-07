@@ -14,7 +14,7 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 
 ### `install-registry-url`
 
-**Optional** - Install registry URL
+**Optional** - Install registry URL. If this input is provided, then install registry setup and login will start.
 
 ### `install-registry-email`
 
@@ -34,19 +34,19 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 
 ### `publish-registry-email`
 
-**Required** - Publish registry email
+**Optional** - Publish registry email. If this input is provided, then publish registry setup and login will start.
 
 ### `publish-registry-username`
 
-**Required** - Publish registry username
+**Optional** - Publish registry username. However, this becomes mandatory if `publish-registry-email` is provided, and `publish-registry-token-credential` is __not__ provided.
 
 ### `publish-registry-password`
 
-**Required** - Publish registry password
+**Optional** - Publish registry password. However, this becomes mandatory if `publish-registry-email` is provided, and `publish-registry-token-credential` is __not__ provided.
 
 ### `publish-registry-token-credential`
 
-**Optional** - Publish registry token credential (will prioritize token authentication if provided)
+**Optional** - Publish registry token credential (will prioritize token authentication if provided). However, this becomes mandatory if `publish-registry-url` is provided, and `publish-registry-username` & `publish-registry-password` pair is absent.
 
 ### `always-use-npm-install`
 
@@ -55,6 +55,7 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 ### `exit-if-folder-not-clean`
 
 **Optional** - exit workflow if at the end git folder not clean
+
 <br /><br />
 
 ## Outputs
@@ -101,9 +102,6 @@ Project/package version number. Will overwrite `P_VERSION` produced at [P_VERSIO
 uses: zowe-actions/nodejs-actions/setup@main
 with:
   package-name: 'org.zowe.mycomponent'
-  publish-registry-email: publish-user@example.org
-  publish-registry-username: p-user
-  publish-registry-password: p-passwd
 ```
 
 To enable debug mode, append

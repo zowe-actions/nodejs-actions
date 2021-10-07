@@ -10449,13 +10449,10 @@ packageName = core.getInput('package-name')
 if (!packageName) 
     throw new InvalidArgumentException('packageName')
 
-var skipPublishRegistry = core.getInput('skip-publish-registry') == 'true' ? true : false
-var skipInstallRegistry = core.getInput('skip-install-registry') == 'true' ? true : false
-
 var packageInfo
 
 // Configuring publishRegistry and login
-if (!skipPublishRegistry) {
+if (core.getInput('publish-registry-email') != '') {
     var prEmail = core.getInput('publish-registry-email')
     var prUsername = core.getInput('publish-registry-username')
     var prPassword = core.getInput('publish-registry-password')
@@ -10494,6 +10491,7 @@ if (!skipPublishRegistry) {
         }
     }
 }
+// else 'publish-registry-email' is null, meaning we will skip publish registry processing
 else {
     var myRegistry = new Registry(args)
     // try to extract publish registry from package.json
@@ -10502,40 +10500,39 @@ else {
 }
 
 // Configuring installRegistry and login
-if (!skipInstallRegistry) {
+
+if (core.getInput('install-registry-url') != '') {
     var irUrl = core.getInput('install-registry-url')
-    if (irUrl != '') {
-        var irEmail = core.getInput('install-registry-email')
-        var irUsername = core.getInput('install-registry-username')
-        var irPassword = core.getInput('install-registry-password')
-        var irTokenCredential = core.getInput('install-registry-token-credential') //if username + password and token both provided, we will prioritize on token authentication
-        if (irEmail && ((irUsername && irPassword) || irTokenCredential)) {
-            console.log('\n>>>>>>>>>>>>>>> Init install registry')
-            var args = new Map()
-            args.set('email', irEmail)
-            args.set('username', irUsername)
-            args.set('password', irPassword)
-            args.set('tokenCredential', irTokenCredential)
-            args.set('registry', irUrl)
-            if (workingDirectory != '') {
-                args.set('workingDirectory', workingDirectory)
-            }
-            installRegistry = new Registry(args)
-            console.log(`- ${installRegistry.scope ? '@'+installRegistry.scope+':':''}`+ installRegistry.registry)
-            console.log('<<<<<<<<<<<<<<< Done init install registry')
-            console.log('\n>>>>>>>>>>>>>>> Login to install registry')
-            installRegistry.login()
-            console.log('<<<<<<<<<<<<<<< Done Login to install registry')
-        } else {
-            if (!irTokenCredential) {
-                if (irUsername || irPassword) {
-                    if (!irUsername)
-                        throw new InvalidArgumentException('install-registry-username')
-                    if (!irPassword)
-                        throw new InvalidArgumentException('install-registry-password')
-                } else {
-                    throw new InvalidArgumentException('Either provide token for install registry or username/password pair')
-                }
+    var irEmail = core.getInput('install-registry-email')
+    var irUsername = core.getInput('install-registry-username')
+    var irPassword = core.getInput('install-registry-password')
+    var irTokenCredential = core.getInput('install-registry-token-credential') //if username + password and token both provided, we will prioritize on token authentication
+    if (irEmail && ((irUsername && irPassword) || irTokenCredential)) {
+        console.log('\n>>>>>>>>>>>>>>> Init install registry')
+        var args = new Map()
+        args.set('email', irEmail)
+        args.set('username', irUsername)
+        args.set('password', irPassword)
+        args.set('tokenCredential', irTokenCredential)
+        args.set('registry', irUrl)
+        if (workingDirectory != '') {
+            args.set('workingDirectory', workingDirectory)
+        }
+        installRegistry = new Registry(args)
+        console.log(`- ${installRegistry.scope ? '@'+installRegistry.scope+':':''}`+ installRegistry.registry)
+        console.log('<<<<<<<<<<<<<<< Done init install registry')
+        console.log('\n>>>>>>>>>>>>>>> Login to install registry')
+        installRegistry.login()
+        console.log('<<<<<<<<<<<<<<< Done Login to install registry')
+    } else {
+        if (!irTokenCredential) {
+            if (irUsername || irPassword) {
+                if (!irUsername)
+                    throw new InvalidArgumentException('install-registry-username')
+                if (!irPassword)
+                    throw new InvalidArgumentException('install-registry-password')
+            } else {
+                throw new InvalidArgumentException('Either provide token for install registry or username/password pair')
             }
         }
     }
