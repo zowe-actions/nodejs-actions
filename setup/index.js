@@ -72,6 +72,10 @@ if (core.getInput('publish-registry-email') != '') {
 }
 // else 'publish-registry-email' is null, meaning we will skip publish registry processing
 else {
+    var args = new Map()
+    if (workingDirectory != '') {
+        args.set('workingDirectory', workingDirectory)
+    }
     var myRegistry = new Registry(args)
     // try to extract publish registry from package.json
     myRegistry.initFromPackageJson(args)
