@@ -18,11 +18,12 @@ None
 
 ## Pre-requisite
 
-- Before you call this action, make sure you call [shared-actions/prepare-workflow](https://github.com/zowe-actions/shared-actions/tree/main/prepare-workflow) and [nodejs-actions/setup](https://github.com/zowe-actions/nodejs-actions/tree/main/setup) . Sample usage would be:
+- Before you call this action, make sure you call [shared-actions/prepare-workflow](https://github.com/zowe-actions/shared-actions/tree/main/prepare-workflow), [nodejs-actions/setup](https://github.com/zowe-actions/nodejs-actions/tree/main/setup) and [shared-actions/publish](https://github.com/zowe-actions/shared-actions/tree/main/publish) . Sample usage would be:
 
     ```yaml
     uses: zowe-actions/shared-actions/prepare-workflow@main
     uses: zowe-actions/nodejs-actions/setup@main
+    uses: zowe-actions/shared-actions/publish@main
     ```
 
 ## Example usage
