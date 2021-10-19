@@ -1,8 +1,7 @@
 # Bump version action for Zowe NodeJS projects
 
 This action bumps up package version for Zowe NodeJS projects in a separate cloned repository branch, then push changes into the branch.
-#### Note:
-This action must be run AFTER [zowe-actions/shared-actions/release](https://github.com/zowe-actions/shared-actions/tree/main/release) is finished.
+
 <br /><br />
 
 ## Inputs
@@ -27,6 +26,12 @@ None
 
     ```yaml
     uses: zowe-actions/shared-actions/prepare-workflow@main
+    ```
+
+- This action must also be run after [shared-actions/release](https://github.com/zowe-actions/shared-actions/tree/main/release) is finished. Sample usage would be:
+
+    ```yaml
+    uses: zowe-actions/shared-actions/release@main
     ```
 
 ## Example usage
