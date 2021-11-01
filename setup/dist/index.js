@@ -11624,7 +11624,7 @@ if (core.getInput('install-registry-url') != '') {
     }
 }
 
-if (!packageInfo.get('versionTrunks') || packageInfo.get('versionTrunks').get('prerelease'))
+if (!packageInfo.get('versionTrunks') || packageInfo.get('versionTrunks').prerelease)
     throw new Error('Version defined in package.json shouldn\'t have pre-release string or metadata, pipeline will adjust based on branch and build parameter.')
 console.log(`Package information: ${packageName} v${packageInfo.get('version')}`)
 
