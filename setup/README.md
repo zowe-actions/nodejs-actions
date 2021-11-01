@@ -78,7 +78,11 @@ PACKAGE_INFO: {
     "name": "my-component",
     "description": "This is my component",
     "version": "1.0.16",
-    "versionTrunks": {},
+    "versionTrunks": {
+      "major": 1,
+      "minor": 0,
+      "patch": 16
+    },
     "license": "EPL-2.0",
     "registry": "https://npm.registry",
     "scripts": [
