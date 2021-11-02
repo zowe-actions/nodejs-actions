@@ -50,11 +50,11 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 
 ### `always-use-npm-install`
 
-**Optional** - Always to use `npm install`. Default `false`
+**Optional** - Always to use `npm install`. Input has to be `true` or `false`. Default `false`
 
 ### `exit-if-folder-not-clean`
 
-**Optional** - exit workflow if at the end git folder not clean
+**Optional** - exit workflow if at the end git folder not clean. Input has to be `true` or `false`. Default `false`
 
 <br /><br />
 

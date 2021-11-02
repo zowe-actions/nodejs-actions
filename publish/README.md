@@ -6,7 +6,7 @@ This action mainly does `npm publish` command to publish to npm registry as defi
 
 ### `perform-release`
 
-**Optional** - The flag to indicate if doing performing release. If not provided, default to false.  
+**Optional** - The flag to indicate if doing performing release. If not provided, default to `false`.  
 
 ## Outputs
 

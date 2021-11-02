@@ -4,6 +4,7 @@ inputs:
   perform-release:
     description: 'indicate if we are performing a release'
     required: false
+    default: 'false'
 
 runs:
   using: 'node12'

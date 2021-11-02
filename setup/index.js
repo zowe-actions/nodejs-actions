@@ -153,8 +153,8 @@ if (utils.fileExists(`${projectRootPath}/yarn.lock`)) {
 } 
 else {
     // we save audit part to next stage
-    var alwaysUseNpmInstall = core.getInput('always-use-npm-install')
-    if (alwaysUseNpmInstall == 'true') {
+    var alwaysUseNpmInstall = core.getBooleanInput('always-use-npm-install')
+    if (alwaysUseNpmInstall) {
         debug(utils.sh(`cd ${projectRootPath} && npm install --no-audit`))
     } else {
         if (utils.fileExists(`${projectRootPath}/package-lock.json`)) {
@@ -176,7 +176,7 @@ ${gitStatus}
 ============ This may cause fail to publish artifact in later stage ============
 `
     )
-    var exitIfFolderNotClean = core.getInput('exit-if-folder-not-clean')
+    var exitIfFolderNotClean = core.getBooleanInput('exit-if-folder-not-clean')
     if (exitIfFolderNotClean) {
         core.setFailed('Git folder is not clean after installing dependencies.\nWorkflow aborted')
     } 
