@@ -37,15 +37,6 @@ inputs:
     description: 'publish registry token credential'
     required: false
 
-  always-use-npm-install:
-    description: 'always use npm install'
-    required: false
-    default: 'false'
-  exit-if-folder-not-clean:
-    description: 'exit workflow if git folder not clean'
-    required: false
-    default: 'false'
-
 runs:
   using: 'node12'
   main: 'dist/index.js'
