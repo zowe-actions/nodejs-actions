@@ -148,50 +148,12 @@ core.exportVariable('P_VERSION',json['version'])
 
 // Install Node Package Dependencies
 console.log('\n>>>>>>>>>>>>>>> Install node package dependencies')
-if (utils.fileExists(`${projectRootPath}/yarn.lock`)) {
-    debug(utils.sh(`cd ${projectRootPath} && yarn install`))
-} 
-else {
-    // we save audit part to next stage
-    var alwaysUseNpmInstall = core.getBooleanInput('always-use-npm-install')
-    if (alwaysUseNpmInstall) {
-        debug(utils.sh(`cd ${projectRootPath} && npm install --no-audit`))
-    } else {
-        if (utils.fileExists(`${projectRootPath}/package-lock.json`)) {
-            // if we have package-lock.json, try to use everything defined in that file
-            debug(utils.sh(`cd ${projectRootPath} && npm ci`))
-        } else {
-            debug(utils.sh(`cd ${projectRootPath} && npm install --no-audit`))
-        }
-    }
+if (utils.fileExists(`${projectRootPath}/package-lock.json`)) {
+    // if we have package-lock.json, try to use everything defined in that file
+    debug(utils.sh(`cd ${projectRootPath} && npm ci`))
+} else {
+    core.setFailed('I couldn\'t find package-lock.json as required, please check your project setup.')
 }
 
-// debug purpose, sometimes npm install will update package-lock.json
-// since we almost use npm ci all the time, this block of code almost never runs
-var gitStatus = utils.sh(`cd ${projectRootPath};git status --porcelain`)
-debug(gitStatus)
-if (gitStatus != '') {
-    console.log(`======================= WARNING: git folder is not clean =======================
-${gitStatus}
-============ This may cause fail to publish artifact in later stage ============
-`
-    )
-    var exitIfFolderNotClean = core.getBooleanInput('exit-if-folder-not-clean')
-    if (exitIfFolderNotClean) {
-        core.setFailed('Git folder is not clean after installing dependencies.\nWorkflow aborted')
-    } 
-    else {
-        // we decide to ignore lock files
-        if (gitStatus == 'M package-lock.json') {
-            console.log('WARNING: package-lock.json will be reset to ignore the failure')
-            debug(utils.sh(`cd ${projectRootPath};git checkout -- package-lock.json`))
-        } else if (gitStatus == 'M yarn.lock') {
-            console.log('WARNING: yarn.lock will be reset to ignore the failure')
-            debug(utils.sh(`cd ${projectRootPath};git checkout -- yarn.lock`))
-        }
-        else {
-            core.setFailed('Git folder is not clean other than lock files after installing dependencies.\nWorkflow aborted')
-        }
-    }
-}
+
 console.log('\n<<<<<<<<<<<<<<< Done install node package dependencies')
