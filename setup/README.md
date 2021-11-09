@@ -6,7 +6,7 @@ This action does setup before building Zowe Nodejs projects. Specifically config
 
 ### `package-name`
 
-**Required** - The name of the package
+**Optional** - The name of the package
 
 ### `working-directory`
 
@@ -96,8 +96,6 @@ Project/package version number. Will overwrite `P_VERSION` produced at [P_VERSIO
 
 ```yaml
 uses: zowe-actions/nodejs-actions/setup@main
-with:
-  package-name: 'org.zowe.mycomponent'
 ```
 
 To enable debug mode, append

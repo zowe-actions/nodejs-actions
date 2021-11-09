@@ -3,7 +3,7 @@ description: "Setup action for NodeJS project"
 inputs:
   package-name: 
     description: 'package name'
-    required: true
+    required: false
   working-directory:
     description: the directory of where to run setup action
     required: false
