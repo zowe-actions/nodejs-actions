@@ -53,7 +53,7 @@ else {
 
     // push version changes
     console.log(`Pushing ${branch} to remote ...`)
-    github.push(branch, tempFolderFull, process.env.GITHUB_USER, process.env.GITHUB_PASSWORD, repo)
+    github.push(branch, tempFolderFull, actionsGithub.context.actor, process.env.GITHUB_TOKEN, repo)
     if (!github.isSync(branch, tempFolderFull)) {
         throw new Error('Branch is not synced with remote after npm version.')
     }
