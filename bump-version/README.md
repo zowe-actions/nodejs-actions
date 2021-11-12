@@ -47,6 +47,8 @@ None
 
 ```yaml
 uses: zowe-actions/nodejs-actions/bump-version@main
+env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 To enable debug mode, append
