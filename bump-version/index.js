@@ -14,7 +14,7 @@ Thus, skip this action run.
 } 
 else {
     var branch = process.env.CURRENT_BRANCH
-    var repo = process.env.GITHUB_REPOSITORY
+    var repo = actionsGithub.context.repo.owner + '/' + actionsGithub.context.repo.repo
     var baseDirectory = core.getInput('base-directory')
     var version = core.getInput('version')
     if (version == '') {

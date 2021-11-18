@@ -12446,18 +12446,111 @@ class github {
     }
 
     /**
+     * Shallow clone a remote repository with latest
+     *
+     * @param  repo            the repository name, required 
+     * @param  dir             the directory of where files should be cloned to, required
+     * @param  branch          the branch name to be cloned, required
+     */
+     static shallowClone(repo, dir, branch, quiet) {
+        if (!repo || !dir || !branch) {
+            console.warn('Clone operation skipped, must specify all three arguments: repo, dir and branch')
+        } 
+        else {
+            var cmd = `mkdir ${dir} && cd ${dir} && git clone`
+            if (branch) {
+                cmd += ` --depth 1 --single-branch --branch ${branch} `
+            }
+            var fullRepo = `https://github.com/${repo}.git/ ${dir}`
+            cmd += fullRepo
+            if (!quiet) {
+                console.log(utils.sh(cmd))
+            } 
+            else {
+                utils.sh(cmd)
+            }
+        }
+    }
+
+    /**
+     * Hard reset a repository, removing all (/staged) changes
+     *
+     * @param  branch          the branch name to be reset, required
+     * @param  workingDir      the working directory
+     */
+    static hardReset(branch, workingDir, quiet) {
+        if (!branch || !workingDir) {
+            console.warn('Hard reset operation skipped, must specify branch and working directory')
+        } 
+        else {
+            var cmd=`cd ${workingDir} && git reset --hard ${branch}`
+            if (!quiet) {
+                console.log(utils.sh(cmd))
+            } 
+            else {
+                utils.sh(cmd)
+            }
+        }
+    }
+
+    /**
+     * Fetch latest changes from remote
+     *
+     * @param  workingDir      the working directory
+     */
+    static fetch(workingDir, quiet) {
+        if (!workingDir) {
+            console.warn('Fetch operation skipped, must specify working directory')
+        } 
+        else {
+            var cmd=`cd ${workingDir} && git fetch`
+            if (!quiet) {
+                console.log(utils.sh(cmd))
+            } 
+            else {
+                utils.sh(cmd)
+            }
+        }
+    }
+
+    /**
+     * Pull down latest changes from remote
+     *
+     * @param  workingDir      the working directory
+     */
+    static pull(workingDir, quiet) {
+        if (!workingDir) {
+            console.warn('Pull operation skipped, must specify working directory')
+        } 
+        else {
+            var cmd=`cd ${workingDir} && git pull`
+            if (!quiet) {
+                console.log(utils.sh(cmd))
+            } 
+            else {
+                utils.sh(cmd)
+            }
+        }
+    }
+
+    /**
      * Push committed changes to a remote repository
      *
      * @param  branch          the branch to be pushed to, required
      * @param  dir             the working directory, required
      */
-    static push(branch, dir, username, passwd, repo) {
+    static push(branch, dir, username, passwd, repo, quiet) {
         if (!branch) {
             console.warn('Push operation skipped, must specify argument: branch')
         } 
         else {
             var cmd = `cd ${dir} && git push https://${username}:${passwd}@github.com/${repo} ${branch}`
-            console.log(utils.sh(cmd))
+            if (!quiet) {
+                console.log(utils.sh(cmd))
+            } 
+            else {
+                utils.sh(cmd)
+            }
         }
     }
 
@@ -12484,7 +12577,6 @@ class github {
             return false
         }
     }
-
 }
 
 module.exports = github;
@@ -12884,10 +12976,17 @@ module.exports = pax;
  */
 
 const { execSync, spawnSync } = __nccwpck_require__(3129)
+const InvalidArgumentException = __nccwpck_require__(1534)
 const fs = __nccwpck_require__(5747)
 const semver = __nccwpck_require__(4603)
 
 class utils {
+
+    static async sleep(ms) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
+    }
 
     static dateTimeNow() {
         return (new Date()).toISOString().split('.')[0].replace(/[^0-9]/g, "")
@@ -12901,14 +13000,20 @@ class utils {
         spawnSync(cmd, { stdio: 'inherit', shell: true})
     }
 
-    static fileExists(path) {
+    static fileExists(path, quiet) {
         try {
             fs.accessSync(path, fs.constants.F_OK)
-            console.log(`${path} exists :D `)
+            if (!quiet) {console.log(`${path} exists :D `)}
             return true
         } catch {
-            console.warn(`${path} does not exist :(`)
+            if (!quiet) {console.warn(`${path} does not exist :(`)}
             return false
+        }
+    }
+
+    static mandatoryInputCheck(varArg, inputName) {
+        if (!varArg || varArg == '') {
+            throw new InvalidArgumentException(inputName)
         }
     }
 
@@ -13011,8 +13116,8 @@ EOF`
         this.sh_heavyload(fullCMD)
     }
 
-    static sftpKeyFile(host, port, username, keyPassPhrase, keyfile, cmds) {
-        var fullCMD = `sshpass -P ${keyPassPhrase} sftp -o BatchMode=no -o StrictHostKeyChecking=no -P ${port} -b -i ${keyfile} ${username}@${host} <<EOF
+    static sftpKeyFile(server, keyPassPhrase, cmds) {
+        var fullCMD = `SSHPASS=${keyPassPhrase} sshpass -e -P "passphrase for key" sftp ${server} <<EOF
 ${cmds}
 exit 0
 EOF`
@@ -13027,8 +13132,8 @@ EOF`
         this.sh_heavyload(fullCMD)
     }
 
-    static sshKeyFile(host, port, username, keyPassPhrase, keyfile, cmds) {
-        var fullCMD = `sshpass -P ${keyPassPhrase} ssh -tt -o BatchMode=no -o StrictHostKeyChecking=no -p ${port} -i ${keyfile} ${username}@${host} <<EOF
+    static sshKeyFile(server, keyPassPhrase, cmds) {
+        var fullCMD = `SSHPASS=${keyPassPhrase} sshpass -e -P "passphrase for key" ssh ${server} <<EOF
 ${cmds}
 exit 0
 EOF`
@@ -13239,7 +13344,7 @@ Thus, skip this action run.
 } 
 else {
     var branch = process.env.CURRENT_BRANCH
-    var repo = process.env.GITHUB_REPOSITORY
+    var repo = actionsGithub.context.repo.owner + '/' + actionsGithub.context.repo.repo
     var baseDirectory = core.getInput('base-directory')
     var version = core.getInput('version')
     if (version == '') {
