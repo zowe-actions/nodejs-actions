@@ -4,7 +4,7 @@
   "description": "A project containing all nodejs related pipeline code",
   "main": "",
   "scripts": {
-    "build": "cd npm-registry && npm update && cd .. && npm update && ./ncc-build-all.sh"
+    "build": "cd npm-registry && npm update zowe-common && cd .. && npm update zowe-common && ./ncc-build-all.sh"
   },
   "repository": {
     "type": "git",
