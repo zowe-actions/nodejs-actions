@@ -23,9 +23,8 @@ else {
 
     // get temp folder for cloning
     var tempFolder = `${process.env.RUNNER_TEMP}/.tmp-npm-registry-${utils.dateTimeNow()}`
-    var tempFolderFull = tempFolder + '/' + actionsGithub.context.repo.repo
 
-    console.log(`Cloning ${branch} into ${tempFolderFull} ...`)
+    console.log(`Cloning ${branch} into ${tempFolder} ...`)
     // clone to temp folder
     github.clone(repo,tempFolder,branch)
 
@@ -36,11 +35,11 @@ else {
     if (baseDirectory != '' && baseDirectory != '.') {
         // REF: https://github.com/npm/npm/issues/9111#issuecomment-126500995
         //      npm version not creating commit or tag in subdirectory [using given workaround]
-        utils.sh(`cd ${tempFolderFull}/${baseDirectory} && mkdir -p .git`)
-        res = utils.sh(`cd ${tempFolderFull}/${baseDirectory} && npm version ${version.toLowerCase()}`)
+        utils.sh(`cd ${tempFolder}/${baseDirectory} && mkdir -p .git`)
+        res = utils.sh(`cd ${tempFolder}/${baseDirectory} && npm version ${version.toLowerCase()}`)
         
     } else {
-        res = utils.sh(`cd ${tempFolderFull} && npm version ${version.toLowerCase()}`)
+        res = utils.sh(`cd ${tempFolder} && npm version ${version.toLowerCase()}`)
     }
     console.log(res)
     if (res.includes('Git working directory not clean.')) {
@@ -49,12 +48,12 @@ else {
         throw new Error(`Bump version failed: ${res}`)
     }
 
-    console.log(utils.sh(`cd ${tempFolderFull} && git rebase HEAD~1 --signoff`))
+    console.log(utils.sh(`cd ${tempFolder} && git rebase HEAD~1 --signoff`))
 
     // push version changes
     console.log(`Pushing ${branch} to remote ...`)
-    github.push(branch, tempFolderFull, actionsGithub.context.actor, process.env.GITHUB_TOKEN, repo)
-    if (!github.isSync(branch, tempFolderFull)) {
+    github.push(branch, tempFolder, actionsGithub.context.actor, process.env.GITHUB_TOKEN, repo)
+    if (!github.isSync(branch, tempFolder)) {
         throw new Error('Branch is not synced with remote after npm version.')
     }
 
