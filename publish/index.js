@@ -27,10 +27,10 @@ if (!npmPublishRegistry || npmPublishRegistry == '') {
 var matchedBranch = utils.searchDefaultBranches()
 var npmTag = ''
 if (matchedBranch && isReleaseBranch && isPerformingRelease) {
-    npmTag = matchedBranch.npmTag
+    npmTag = matchedBranch.npmTag.replace('BRANCHNAMEREPLACE', process.env.CURRENT_BRANCH)
 }
 if (!npmTag) {
-    npmTag = DEFAULT_NPM_NON_RELEASE_TAG
+    npmTag = process.env.CURRENT_BRANCH + '-' + DEFAULT_NPM_NON_RELEASE_TAG
 }
 
 console.log(`Publishing package v${process.env['PUBLISH_VERSION']} as tag ${npmTag}`)
