@@ -14,18 +14,21 @@ const Debug = require('debug')
 const debug = Debug('zowe-actions:nodejs-actions:publish')
 const DEFAULT_NPM_NON_RELEASE_TAG = 'snapshot'
 
-var isReleaseBranch = `${ process.env.IS_RELEASE_BRANCH == 'true' ? true : false }`
-var isPerformingRelease = core.getInput('perform-release') == 'true' ? true : false
-var packageInfo = process.env.PACKAGE_INFO ? JSON.parse(process.env.PACKAGE_INFO) : ''
+
+let isReleaseBranch = `${ process.env.IS_RELEASE_BRANCH == 'true' }`
+let isPerformingRelease = core.getInput('perform-release') == 'true';
+let shouldUseProvenanceFlag = core.getInput('sigstore-npm-provenance') == 'true';
+
+let packageInfo = process.env.PACKAGE_INFO ? JSON.parse(process.env.PACKAGE_INFO) : ''
 if (packageInfo == '') {
     throw new Error('There is no environment variable PACKAGE_INFO, possibly meaning package.json is absent. Check any warning message in zowe-actions/nodejs-actions/setup')   
 }
-var npmPublishRegistry = packageInfo['registry']
+let npmPublishRegistry = packageInfo['registry']
 if (!npmPublishRegistry || npmPublishRegistry == '') {
     throw new Error('There is no registry information within package.json, please fix it in package.json before doing a npm publish. publish registry information is mandatory')
 }
-var matchedBranch = utils.searchDefaultBranches()
-var npmTag = ''
+let matchedBranch = utils.searchDefaultBranches()
+let npmTag = ''
 if (matchedBranch && isReleaseBranch && isPerformingRelease) {
     npmTag = matchedBranch.npmTag.replace('BRANCHNAMEREPLACE', process.env.CURRENT_BRANCH)
 }
@@ -44,12 +47,12 @@ console.log(`Publishing package v${process.env['PUBLISH_VERSION']} as tag ${npmT
  *    That's why below code does a $ npm version PUBLISH_VERSION first without commit to temporarily update the 'version' in package.json,
  *    then do a npm publish, later revert changes back.
  */
-var revert = false
+let revert = false
 if (process.env.PUBLISH_VERSION != process.env.P_VERSION) { //P_VERSION will always be exact version number
     revert = true
 }
 debug(`Do we need to revert changes? ${revert}`)
-var currentCommit
+let currentCommit
 if (revert) {
     currentCommit = utils.sh('git rev-parse HEAD')
     debug(`current commit is ${currentCommit}`)
@@ -58,8 +61,14 @@ if (revert) {
     debug(`Running $ npm version --no-git-tag-version ${process.env.PUBLISH_VERSION}`)
     debug(utils.sh(`npm version --no-git-tag-version ${process.env.PUBLISH_VERSION}`))
 }
-debug(`Running $ npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`)
-debug(utils.sh(`npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`))
+if (shouldUseProvenanceFlag) {
+    debug(`Running $ npm publish --tag ${npmTag} --registry ${npmPublishRegistry} --provenance`)
+    debug(utils.sh(`npm publish --tag ${npmTag} --registry ${npmPublishRegistry} --provenance`))
+} else {
+    debug(`Running $ npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`)
+    debug(utils.sh(`npm publish --tag ${npmTag} --registry ${npmPublishRegistry}`))
+}
+
 
 if (revert && currentCommit) {
     console.log('Revert changes by npm version ...')

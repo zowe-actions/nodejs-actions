@@ -5,7 +5,11 @@ inputs:
     description: 'indicate if we are performing a release'
     required: false
     default: 'false'
+  sigstore-npm-provenance:
+    description: 'indicate if we should sign published artifacts with npms --provenance flag'
+    required: false
+    default: 'false'
 
 runs:
-  using: 'node12'
+  using: 'node20'
   main: 'dist/index.js'
