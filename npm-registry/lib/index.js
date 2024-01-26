@@ -156,7 +156,7 @@ class Registry {
         // if (this.steps.fileExists('.npmrc')) {
         //     this.steps.sh "rm -f .npmrc || exit 0"
         // }
-
+        debug(`NPM Version: ${utils.sh('npm --version')}`)
         // update auth in .npmrc
         if (this.tokenCredential) {
             var configEntries = new Array()

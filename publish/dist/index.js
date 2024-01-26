@@ -32555,6 +32555,9 @@ const Debug = __nccwpck_require__(8797)
 const debug = Debug('zowe-actions:nodejs-actions:publish')
 const DEFAULT_NPM_NON_RELEASE_TAG = 'snapshot'
 
+debug(`Node Version: ${process.versions.node}`)
+debug(`NPM Version: ${utils.sh('npm --version')}`)
+
 
 let isReleaseBranch = `${ process.env.IS_RELEASE_BRANCH == 'true' }`
 let isPerformingRelease = core.getInput('perform-release') == 'true';
