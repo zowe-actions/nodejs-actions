@@ -205,7 +205,9 @@ class Registry {
         var cmds = `npm config list`
         debug(cmds)
         debug(utils.sh(cmds))
-        
+
+        utils.sh(`npm login`);
+
         // get login information
         var cmds = `npm whoami --registry ${this.registry}`
         debug(cmds)
