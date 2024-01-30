@@ -163,6 +163,7 @@ class Registry {
             configEntries.push(`set +x`)
             configEntries.push(`npm config set _auth ${this.tokenCredential}`)
             configEntries.push(`npm config set email ${this.email}`)
+            configEntries.push(`npm config set //${registryWithoutProtocol}/:_auth ${this.tokenCredential}`)
             configEntries.push(`npm config set always-auth true`)
             if (this.scope) {
                 configEntries.push(`npm config set @${this.scope}:registry ${this.registry}`)
