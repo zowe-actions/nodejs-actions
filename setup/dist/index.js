@@ -32426,7 +32426,7 @@ class Registry {
             configEntries.push(`set +x`)
         //    configEntries.push(`npm config set _auth ${this.tokenCredential}`)
             configEntries.push(`npm config set email ${this.email}`)
-            configEntries.push(`npm config set //${registryWithoutProtocol}:_auth ${this.tokenCredential}`)
+            configEntries.push(`npm config set ${registryWithoutProtocol}:_auth ${this.tokenCredential}`)
          //   configEntries.push(`npm config set always-auth true`)
             if (this.scope) {
                 configEntries.push(`npm config set @${this.scope}:registry ${this.registry}`)
@@ -32447,7 +32447,7 @@ class Registry {
             var configEntries = new Array()
             configEntries.push(`set +x`)
       //      configEntries.push(`npm config set _auth ${base64UsernamePassword}`)
-            configEntries.push(`npm config set //${registryWithoutProtocol}:_auth ${base64UsernamePassword}`)
+            configEntries.push(`npm config set ${registryWithoutProtocol}:_auth ${base64UsernamePassword}`)
             configEntries.push(`npm config set email ${this.email}`)
      //       configEntries.push(`npm config set always-auth true`)
             if (this.scope) {
@@ -32455,7 +32455,7 @@ class Registry {
                 configEntries.push(`npm config set ${registryWithoutProtocol}:username ${this.username}`)
                 configEntries.push(`npm config set ${registryWithoutProtocol}:_password ${base64Password}`)
                 configEntries.push(`npm config set ${registryWithoutProtocol}:email ${this.email}`)
-                configEntries.push(`npm config set ${registryWithoutProtocol}:always-auth true`)
+             //   configEntries.push(`npm config set ${registryWithoutProtocol}:always-auth true`)
             } else {
                 configEntries.push(`npm config set registry ${this.registry}`)
             }
@@ -32469,7 +32469,7 @@ class Registry {
         debug(cmds)
         debug(utils.sh(cmds))
 
-        utils.sh(`npm login`);
+        debug(utils.sh(`npm login`));
 
         // get login information
         var cmds = `npm whoami --registry ${this.registry}`
