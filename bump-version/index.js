@@ -32,6 +32,29 @@ else {
     console.log(`Making a "${version}" version bump ...`)
 
     var res
+	var manifest
+	var newVersion
+	
+	if (baseDirectory != '' && baseDirectory != '.') {
+        workdir += `/${baseDirectory}`
+    }
+	
+	if (utils.fileExists(workdir + '/manifest.yaml')) {
+        manifest = 'manifest.yaml'
+    } else if (utils.fileExists(workdir + '/manifest.yml')) {
+        manifest = 'manifest.yml'
+    } else if (utils.fileExists(workdir + '/manifest.json')) {
+        throw new Error('Bump version on manifest.json is not supported yet.')
+    } else {
+        throw new Error('No manifest found.')
+    }
+	newVersion = utils.bumpManifestVersion(`${workdir}/${manifest}`, version)
+    console.log('New version:', newVersion)
+    github._cmd(tempFolder, 'status');
+    github._cmd(tempFolder, 'diff');
+    github.add(workdir, 'manifest.yaml')
+	
+	
     if (baseDirectory != '' && baseDirectory != '.') {
         // REF: https://github.com/npm/npm/issues/9111#issuecomment-126500995
         //      npm version not creating commit or tag in subdirectory [using given workaround]
