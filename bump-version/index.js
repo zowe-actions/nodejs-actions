@@ -34,7 +34,7 @@ else {
     var res
     var manifest
     var newVersion
-    var workdir = '.';
+    var workdir = `${tempFolder}/${baseDirectory}`;
     if (baseDirectory != '' && baseDirectory != '.') {
         workdir += `/${baseDirectory}`
     }
