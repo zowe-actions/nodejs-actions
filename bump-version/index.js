@@ -55,6 +55,7 @@ else {
         github._cmd(tempFolder, 'status');
         github._cmd(tempFolder, 'diff');
         github.add(workdir, manifest)
+        github.commit(workingDir, `[Automated] Update manifest.yaml to ${newVersion}`, true)
     }
 	
     if (baseDirectory != '' && baseDirectory != '.') {
