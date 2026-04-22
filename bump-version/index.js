@@ -34,8 +34,8 @@ else {
     var res
     var manifest
     var newVersion
-    var workdir = `${tempFolder}/${baseDirectory}`;
-    if (baseDirectory != '' && baseDirectory != '.') {
+    var workdir = `${tempFolder}`
+    if (baseDirectory != null) {
         workdir += `/${baseDirectory}`
     }
     if (utils.fileExists(workdir + '/manifest.yaml')) {
