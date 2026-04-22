@@ -16,6 +16,8 @@ else {
     var branch = process.env.CURRENT_BRANCH
     var repo = actionsGithub.context.repo.owner + '/' + actionsGithub.context.repo.repo
     var baseDirectory = core.getInput('base-directory')
+    var manifestDirectory = core.getInput('manifest-directory')
+    var npmPackageDirectory = core.getInput('npm-package-directory')
     var version = core.getInput('version')
     if (version == '') {
         version = 'PATCH'
@@ -35,7 +37,9 @@ else {
     var manifest
     var newVersion
     var workdir = `${tempFolder}`
-    if (baseDirectory != null) {
+    if (manifestDirectory != '') {
+        workdir += `/${manifestDirectory}`
+    } else if (baseDirectory != '') {
         workdir += `/${baseDirectory}`
     }
     if (utils.fileExists(workdir + '/manifest.yaml')) {
@@ -58,11 +62,12 @@ else {
         github.commit(workdir, `[Automated] Update manifest.yaml to ${newVersion}`, true)
     }
 	
-    if (baseDirectory != '' && baseDirectory != '.') {
+    if (baseDirectory != '' || npmPackageDirectory != '') {
         // REF: https://github.com/npm/npm/issues/9111#issuecomment-126500995
         //      npm version not creating commit or tag in subdirectory [using given workaround]
-        utils.sh(`cd ${tempFolder}/${baseDirectory} && mkdir -p .git`)
-        res = utils.sh(`cd ${tempFolder}/${baseDirectory} && npm version ${version.toLowerCase()}`)
+        const npmDir = npmPackageDirectory != '' ? `${tempFolder}/${npmPackageDirectory}` : `${tempFolder}/${baseDirectory}`
+        utils.sh(`cd ${npmDir} && mkdir -p .git`)
+        res = utils.sh(`cd ${npmDir} && npm version ${version.toLowerCase()}`)
         
     } else {
         res = utils.sh(`cd ${tempFolder} && npm version ${version.toLowerCase()}`)

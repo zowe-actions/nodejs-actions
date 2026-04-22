@@ -4,6 +4,12 @@ inputs:
   base-directory:
     description: 'the base directory to run version bump'
     required: false
+  manifest-directory:
+    description: 'force the manifest directory when bumping version. overrules base-directory'
+    required: false
+  npm-package-directory:
+    description: 'force the npm package directory when bumping version. overrules base-directory'
+    required: false
   version:
     description: 'which version level needed to bump version, eg. npm version patch'
     required: false
